@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
 import { cryptoSymbol } from 'crypto-symbol'
 
 const { nameLookup } = cryptoSymbol({})
@@ -8,10 +8,26 @@ const Coin = (props) => {
 
   const iconUrl = `https://cryptoicons.org/api/color/${props.symbol.toLowerCase()}/600/`
 
+
   return (
     <TouchableOpacity style={styles.container}>
       <Image source={{ uri: iconUrl }} style={styles.icon} />
-      <Text style={styles.name}>{nameLookup(props.symbol)}</Text>
+
+      <View style={styles.TextsWrapper}>
+        {/* this is in the left end */}
+        <View style={styles.NamesWrapper}>
+          <Text style={styles.nameText}>{nameLookup(props.symbol)}</Text>
+          <Text style={styles.symbolText}>{props.symbol.toUpperCase()}</Text>
+        </View>
+
+        {/* this is in the right end */}
+        <View style={styles.BalanceWrapper}>
+          <Text style={styles.BalanceTextUsd}>{props.balance}</Text>
+          <Text style={styles.BalanceText}>{props.balance}</Text>
+        </View>
+      </View>
+      
+
     </TouchableOpacity>
   );
 };
@@ -43,6 +59,47 @@ container: {
     fontSize: 16,
     fontWeight: 'bold',
   },
+  nameText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  symbolText: {
+    fontSize: 14,
+    // color: '#fff',
+    // slighty gray
+    color: '#D3D3D3'
+  },
+  NamesWrapper: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  TextsWrapper: {
+    // backgroundColor: 'purple',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  BalanceWrapper: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  BalanceText: {
+    fontSize: 14,
+    color: '#D3D3D3'
+
+  },
+  BalanceTextUsd: {
+    fontSize: 20,
+    // color: '#fff',
+    // slighty gray
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+
+
+
 });
 
 export default Coin;
