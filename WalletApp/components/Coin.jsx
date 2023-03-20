@@ -1,12 +1,47 @@
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
 import { cryptoSymbol } from 'crypto-symbol'
+import { useState, useEffect } from 'react';
 
 const { nameLookup } = cryptoSymbol({})
 
 const Coin = (props) => {
 
+  const [coinPrice, setCoinPrice] = useState('...')
+
   const iconUrl = `https://cryptoicons.org/api/color/${props.symbol.toLowerCase()}/600/`
+
+
+  const widthWithoutImage = '100% - 60'
+
+  const getCoinPrice = () => {
+    // const url = "https://api.coinconvert.net/convert/btc/usd?amount=1"
+    const url = "https://api.coinconvert.net/convert/" + props.symbol + "/usd?amount=" + props.balance
+    fetch(url)
+      .then((response) => response.json())
+      .then((json) => {
+        // console.log(json.USD)
+        setCoinPrice(json.USD)
+        return json
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  // useEffect(() => {
+  //   getCoinPrice()
+  // }, [props.balance])
+  // do that but set interval to 5 seconds
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getCoinPrice()
+      console.log('got price');
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
 
 
   return (
@@ -22,7 +57,9 @@ const Coin = (props) => {
 
         {/* this is in the right end */}
         <View style={styles.BalanceWrapper}>
-          <Text style={styles.BalanceTextUsd}>{props.balance}</Text>
+          {/* <Text style={styles.BalanceTextUsd}>{props.balance}</Text>  */}
+          {/* <Text style={styles.BalanceTextUsd}>{getCoinPrice()}</Text> */}
+          <Text style={styles.BalanceTextUsd}>{coinPrice === "..." ? "..." : coinPrice.toFixed(2)}</Text>
           <Text style={styles.BalanceText}>{props.balance}</Text>
         </View>
       </View>
@@ -75,16 +112,16 @@ container: {
     alignItems: 'flex-start',
   },
   TextsWrapper: {
-    // backgroundColor: 'purple',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '80%',
+    flex: 1,
   },
   BalanceWrapper: {
     flexDirection: 'column',
     alignItems: 'flex-end',
-  },
+    width: 170,
+  },  
   BalanceText: {
     fontSize: 14,
     color: '#D3D3D3'

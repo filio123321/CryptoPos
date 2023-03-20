@@ -24,7 +24,7 @@ export default function HomeScreen() {
                         showsHorizontalScrollIndicator={false} 
                         style={styles.FunnctionalityButtonsWrapper}
                     >
-                        <View style={{flexDirection: 'column', alignItems: 'center', marginHorizontal: 10,}}>
+                        <View style={{flexDirection: 'column', alignItems: 'center', marginHorizontal: 10}}>
                             <TouchableOpacity style={styles.FuncButton}>
                                 <Feather name="arrow-down-left" size={45} color="black" />
                             </TouchableOpacity>
@@ -79,8 +79,8 @@ export default function HomeScreen() {
                     </View>
 
                     <View style={styles.OwnedCoinsWrapper}>
-                        <Coin symbol='BTC' balance='0.0014'/>
-                        <Coin symbol='ETH' balance='0.066'/>
+                        <Coin symbol='BTC' balance='1000.0014'/>
+                        <Coin symbol='ETH' balance='900000.066'/>
                         <Coin symbol='XRP' balance='2.34621'/>
                     </View>
 
