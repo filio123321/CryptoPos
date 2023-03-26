@@ -3,10 +3,28 @@ import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import Coin from '../components/Coin';
+import { useEffect, useState } from 'react';
+import {getAddressBalance} from '.././api/bsc_api';
 
 
 
 export default function HomeScreen() {
+    const [balance, setBalance] = useState('...');
+        // 0xc658595AB119817247539a000fdcF9f646bb65dc
+
+
+    useEffect(() => {
+        getAddressBalance('0xc658595AB119817247539a000fdcF9f646bb65dc').then((balance) => {
+            console.log(balance);
+            // setBalance(balance);
+            setBalance(balance);
+          }).catch((error) => {
+            console.error(error);
+          });
+    }, []);
+
+
+
     return (
         // <View style={styles.container}>
 
@@ -14,7 +32,8 @@ export default function HomeScreen() {
                 
                 <View style={styles.BalanceWrapper}>
                     <Text style={styles.BalanceText}>
-                        $12,345.<Text style={styles.BalanceTextCents}>03</Text>
+                        {/* $12,345.<Text style={styles.BalanceTextCents}>03</Text> */}
+                        {balance}
                     </Text>
                 </View>
 

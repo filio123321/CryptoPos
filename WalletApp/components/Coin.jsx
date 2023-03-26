@@ -29,18 +29,18 @@ const Coin = (props) => {
       });
   }
 
-  // useEffect(() => {
-  //   getCoinPrice()
-  // }, [props.balance])
+  useEffect(() => {
+    getCoinPrice()
+  }, [props.balance])
   // do that but set interval to 5 seconds
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getCoinPrice()
-      console.log('got price');
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getCoinPrice()
+  //     console.log('got price');
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
 
 
