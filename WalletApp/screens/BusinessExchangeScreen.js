@@ -1,36 +1,28 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
-export default function LoginScreen() {
-  const navigation = useNavigation();
+import React from "react";
+
+export default function BusinessExchange() {
   const [fontsLoaded, error] = Font.useFonts({
     "OpenSans-Medium": require("../assets/fonts/OpenSans-Medium.ttf"),
     "OpenSans-Bold": require("../assets/fonts/OpenSans-Bold.ttf"),
   });
+  const [number, onChangeNumber] = React.useState("");
 
   if (!fontsLoaded) {
     return null;
   }
-  const BusinessRedirect = () => {
-    navigation.replace("BusinessExchange");
-  };
 
-  const PersonalRedirect = () => {
-    navigation.replace("Home");
-  };
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.header}>What is the purpose of this account</Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={PersonalRedirect}>
-          <Text style={styles.buttonText}>Personal</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={BusinessRedirect}>
-          <Text style={styles.buttonText}>Business</Text>
-        </TouchableOpacity>
-      </View>
+      <TextInput
+        style={styles.input}
+        onChangeText={onChangeNumber}
+        value={number}
+        placeholder="0.00"
+        keyboardType="numeric"
+      />
     </View>
   );
 }
@@ -38,9 +30,14 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#050505",
+    // backgroundColor: "#050505",
     alignItems: "center",
     justifyContent: "center",
+  },
+  input: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 8,
   },
   header: {
     marginBottom: 30,
