@@ -16,13 +16,19 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'Home Screen', headerStyle: {backgroundColor: '#28282B'}, headerTintColor: '#fff', headerTitleStyle: {fontWeight: 'bold'}}}
-          // options={{ headerShown: false }}
+          options={{
+            title: 'Wallet balance',
+            headerStyle: { backgroundColor: '#161616' },
+            headerTintColor: '#fff',
+            headerTitleStyle: { fontWeight: 'bold' },
+            headerTitleContainerStyle: {  },
+            // headerTransparent: true,
+          }}
         />
-        {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
         <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+
     // <View style={styles.container}>
     //   <Text>Open up App.js to start working on your app!</Text>
     //   <StatusBar style="auto" />

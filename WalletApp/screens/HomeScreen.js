@@ -4,25 +4,38 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import Coin from '../components/Coin';
 import { useEffect, useState } from 'react';
-import {getAddressBalance} from '.././api/bsc_api';
+import { getAddressBalance, bnbTousd } from '.././api/bsc_api';
 
 
 
 export default function HomeScreen() {
-    const [balance, setBalance] = useState('...');
+    const [balanceBNB, setBalanceBNB] = useState(0);
+    const [balanceUSD, setBalanceUSD] = useState(0);
         // 0xc658595AB119817247539a000fdcF9f646bb65dc
 
+        const convertBnbToUsd = async () => {
+            const bnbPrice = await bnbTousd(balanceBNB); // assuming you want to convert 10 BNB to USD
+            console.log("async", bnbPrice); // output the USD value of 10 BNB
+          };
 
     useEffect(() => {
-        getAddressBalance('0xc658595AB119817247539a000fdcF9f646bb65dc').then((balance) => {
+        getAddressBalance('0x260e69ab6665B9ef67b60674E265b5D21c88CB45').then((balance) => {
             console.log(balance);
-            // setBalance(balance);
-            setBalance(balance);
+            setBalanceBNB(balance / 1000000000000000000);
           }).catch((error) => {
             console.error(error);
           });
     }, []);
 
+    useEffect(() => {
+        const getBalanceUSD = async () => {
+            const balance = await bnbTousd(balanceBNB); // pass in your BNB balance here
+            setBalanceUSD(balance);
+        }
+
+        getBalanceUSD();
+        console.log("SPLIT", balanceUSD);
+    }, [balanceBNB]);
 
 
     return (
@@ -32,8 +45,10 @@ export default function HomeScreen() {
                 
                 <View style={styles.BalanceWrapper}>
                     <Text style={styles.BalanceText}>
-                        {/* $12,345.<Text style={styles.BalanceTextCents}>03</Text> */}
-                        {balance}
+                        $ {balanceUSD.toFixed(0)}
+
+                        {(balanceUSD == 0 ? null : <><Text>.</Text><Text style={styles.BalanceTextCents}>{balanceUSD.toString().split('.')[1].slice(0, 2)}</Text></>)}
+
                     </Text>
                 </View>
 
@@ -114,7 +129,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#28282B',
+        backgroundColor: '#161616',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -126,7 +141,7 @@ const styles = StyleSheet.create({
     },
     BalanceWrapper: {
         // backgroundColor: 'purple',
-        backgroundColor: '#28282B',
+        backgroundColor: '#161616',
         // height: '100%',
         padding: 60,
         width: '100%',
@@ -151,7 +166,7 @@ const styles = StyleSheet.create({
         // row
         flexDirection: 'row',
         // backgroundColor: 'red',
-        backgroundColor: '#28282B',
+        backgroundColor: '#161616',
 
     },
     FuncButton: {
@@ -173,7 +188,7 @@ const styles = StyleSheet.create({
     },
     MyCoinsWrpper: {
         // backgroundColor: 'green',
-        backgroundColor: '#28282B',
+        backgroundColor: '#161616',
         height: '100%',
         width: '100%',
         // paddingTop: 50,
@@ -204,7 +219,7 @@ const styles = StyleSheet.create({
     },
     OwnedCoinsWrapper: {
         // backgroundColor: 'red',
-        backgroundColor: '#28282B',
+        backgroundColor: '#161616',
         height: '100%',
         width: '100%',
         // paddingTop: 50,
@@ -216,3 +231,7 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+
+// 28282B

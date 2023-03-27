@@ -1,7 +1,7 @@
 // use bscscan api to get data
 // import axios from 'axios'
 // api key KU2R2B8SZ7GW3QKRWCIWGZDS13UX16XC9T
-// import axios 
+import axios from 'axios';
 
 
 
@@ -21,3 +21,19 @@ export const getAddressBalance = (address) => {
       });
   };
 
+
+  export const bnbTousd = async (bnb) => {
+    try {
+      const url = `https://api.coincap.io/v2/assets/binance-coin`;
+      const response = await axios.get(url);
+      // console.log(response.data.data.priceUsd);
+      // console.log("KUR", bnb);
+      // console.log(response.data.data.priceUsd * bnb);
+      return response.data.data.priceUsd * bnb;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  
+  
