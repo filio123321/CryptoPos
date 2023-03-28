@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
@@ -23,6 +29,9 @@ export default function BusinessExchange() {
         placeholder="0.00"
         keyboardType="numeric"
       />
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Next</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -30,36 +39,28 @@ export default function BusinessExchange() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#050505",
+    backgroundColor: "#050505",
     alignItems: "center",
     justifyContent: "center",
   },
   input: {
     borderRadius: 20,
-    borderWidth: 1,
     padding: 8,
-  },
-  header: {
-    marginBottom: 30,
-    color: "white",
-    fontSize: 21,
-    fontFamily: "OpenSans-Medium",
-  },
-  buttonContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
+    width: "50%",
   },
   button: {
+    width: "90%",
+    backgroundColor: "blue",
     borderRadius: 20,
-    padding: 10,
-    marginBottom: 10,
-    width: "80%",
-    backgroundColor: "#c3adf7",
+    borderWidth: 1,
+    position: "absolute",
+    bottom: "10%",
   },
   buttonText: {
     textAlign: "center",
     fontFamily: "OpenSans-Medium",
-    fontSize: 17,
+    color: "#fff",
+    fontSize: 24,
+    padding: 10,
   },
 });
