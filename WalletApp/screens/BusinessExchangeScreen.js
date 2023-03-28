@@ -3,7 +3,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
@@ -15,24 +17,33 @@ export default function BusinessExchange() {
     "OpenSans-Bold": require("../assets/fonts/OpenSans-Bold.ttf"),
   });
   const [number, onChangeNumber] = React.useState("");
-
+  function handleOnChangeNumber(text) {
+    onChangeNumber(text);
+  }
   if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      > */}
       <TextInput
         style={styles.input}
-        onChangeText={onChangeNumber}
+        onChangeText={handleOnChangeNumber}
         value={number}
-        placeholder="0.00"
+        placeholder="0.00$"
+        placeholderTextColor={"#fff"}
         keyboardType="numeric"
       />
+
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
-    </View>
+      {/* </KeyboardAvoidingView> */}
+    </SafeAreaView>
   );
 }
 
@@ -45,8 +56,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderRadius: 20,
-    padding: 8,
-    width: "50%",
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#fff",
+    width: "20%",
+    position: "absolute",
+    top: "10%",
+    fontSize: 18,
+    color: "#fff",
   },
   button: {
     width: "90%",
@@ -54,7 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     position: "absolute",
-    bottom: "10%",
+    bottom: "20%",
   },
   buttonText: {
     textAlign: "center",
