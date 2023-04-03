@@ -1,8 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import { Text, TouchableOpacity, Keyboard } from "react-native";
+import { Image, TouchableOpacity, Keyboard } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import * as Font from "expo-font";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BusinessExchangeScreen from "./screens/BusinessExchangeScreen";
@@ -10,6 +9,14 @@ import BusinessExchangeScreen from "./screens/BusinessExchangeScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [fontsLoaded, error] = Font.useFonts({
+    "Manjari-Regular": require("./assets/fonts/Manjari-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -21,31 +28,30 @@ export default function App() {
         <Stack.Screen
           name="BusinessExchange"
           component={BusinessExchangeScreen}
-          options={{
+          options={({ navigation }) => ({
             headerShown: true,
-            headerTitle: "Binance Crypto Exchange",
-            headerTintColor: "#fff",
+            headerTitle: "Crypto Pay",
+            headerTintColor: "#CA34FF",
             headerStyle: {
-              backgroundColor: "black",
+              backgroundColor: "#1E1E1E",
               shadowOffset: { height: 0, width: 0 },
               elevation: 0,
             },
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 30,
+              fontFamily: "Manjari-Regular",
+              marginTop: 10,
+            },
             headerLeft: () => (
               <TouchableOpacity
-                onPress={() => navigator.replace("Login")}
+                onPress={() => navigation.navigate("Login")}
                 style={{ marginLeft: 10 }}
               >
-                <Text style={{ color: "#fff", fontSize: 17 }}>Back</Text>
+                <Image source={require("./assets/back.png")} />
               </TouchableOpacity>
             ),
-            headerRight: () => (
-              <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-                <Text style={{ color: "#fff", fontSize: 17, marginRight: 10 }}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            ),
-          }}
+          })}
         />
         <Stack.Screen
           name="Home"
@@ -54,16 +60,12 @@ export default function App() {
             title: "Home Screen",
             headerStyle: { backgroundColor: "#28282B" },
             headerTintColor: "#fff",
-            headerTitleStyle: { fontWeight: "bold" },
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
           }}
-          // options={{ headerShown: false }}
         />
-        {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    //   <StatusBar style="auto" />
-    // </View>
   );
 }
