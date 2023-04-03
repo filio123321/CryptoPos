@@ -5,12 +5,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import PagerView from 'react-native-pager-view';
 import { ImageBackground, Image } from 'react-native';
 import { useFonts } from 'expo-font';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 
 
 
 export default function LoginScreen() {
+    const ref = useRef(PagerView);
+
     const [fontsLoaded, error] = useFonts({
         'font3': require('../assets/fonts/font3.otf'),
         'manjari': require('../assets/fonts/Manjari-Regular.ttf'),
@@ -24,7 +26,7 @@ export default function LoginScreen() {
 
 
     return (
-    <PagerView style={styles.pagerView} initialPage={0}>
+    <PagerView style={styles.pagerView} initialPage={0} ref={ref}>
         {/* <View key="1">
             <Text>First page</Text>
         </View>
@@ -79,9 +81,15 @@ export default function LoginScreen() {
             <View style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                top: '65%',
+                top: '67%',
             }} >
                 <TouchableOpacity
+                    // change page to key 2 on press
+                    onPress={() => {
+                        ref.current.setPage(1);
+                        // PagerView.goToPage(2);
+                    }}
+
                     style={{
                         backgroundColor: 'rgba(206, 155, 230, 0.15)',
                         borderColor: '#CA34FF',
@@ -130,7 +138,61 @@ export default function LoginScreen() {
 
 
         >
-            <Text>Second page</Text>
+            <Text style={{
+                fontFamily: 'manjari',
+                fontSize: 35,
+                color: '#BD8CDC',
+                top: '23%',
+                position: 'absolute',
+            }}>About</Text>
+
+            <Text style={{
+                fontFamily: 'manjari',
+                fontSize: 25,
+                color: 'white',
+                top: '33%',
+                position: 'absolute',
+                marginHorizontal: 20,
+                // cetner the text
+                textAlign: 'center',
+            }}
+            >Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.
+            {'\n'}{'\n'}{'\n'}{'\n'}
+
+            
+                <Text
+                    style={{
+                        fontFamily: 'manjari',
+                        fontSize: 30,
+                        color: '#BD8CDC',
+                        bottom: '37%',
+                        // position: 'absolute',
+                        paddingBottom: 20,
+                        // center the text
+                        textAlign: 'center',
+
+                    }}
+                >CHOOSE ACCOUNT TYPE:{'\n'}
+                <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center',
+                        marginTop: 80,
+                        // cetner them
+                        // textAlign: 'center',
+                        justifyContent: 'center',
+                        
+                    }}>
+                        <TouchableOpacity style={{backgroundColor: "rgba(206, 155, 230, 0.15)", borderColor: "#CA34FF", borderWidth: 3, borderRadius: 15, paddingHorizontal: 20, marginHorizontal: 10 }}><Text style={{ color: "white", padding: 10, fontFamily: "manjari", fontSize: 25 }}>Business</Text></TouchableOpacity>
+                        <TouchableOpacity style={{backgroundColor: "rgba(206, 155, 230, 0.15)", borderColor: "#CA34FF", borderWidth: 3, borderRadius: 15, paddingHorizontal: 20, marginHorizontal: 10 }}><Text style={{ color: "white", padding: 10, fontFamily: "manjari", fontSize: 25 }}>Personal</Text></TouchableOpacity>
+                </View>
+                </Text>
+                
+            </Text>
+        
+            
+            
+        
         </LinearGradient>
 
     </PagerView>
