@@ -27,6 +27,7 @@ export default function BusinessExchange({ navigator }) {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
+      keyboardVerticalOffset={30}
     >
       <View style={styles.viewContainer}>
         <View style={styles.coinContainer}>
