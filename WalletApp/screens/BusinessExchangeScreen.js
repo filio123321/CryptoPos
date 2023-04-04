@@ -3,21 +3,40 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   View,
   Keyboard,
 } from "react-native";
 import * as Font from "expo-font";
+import { getAddressBalance, usdToBnb } from "../api/bsc_api";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { useRef } from "react";
 
 export default function BusinessExchange({ navigator }) {
+  const navigation = useNavigation();
+  const [balanceBNB, setBalanceBNB] = useState(0);
+  const [TextusdToBnb, setUsdBNB] = useState(0);
+  const wallet = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
+  const currency = "BNB";
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
+
+  async function loadUSDtoBNB(input) {
+    const bnbAmount = await usdToBnb(input);
+    setUsdBNB(bnbAmount);
+  }
+  useEffect(() => {
+    getAddressBalance(wallet)
+      .then((balance) => {
+        setBalanceBNB(balance / 1000000000000000000);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    loadUSDtoBNB(10);
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -59,6 +78,10 @@ export default function BusinessExchange({ navigator }) {
             style={styles.input}
             placeholder="10"
             placeholderTextColor="#fff"
+            onChangeText={(value) => {
+              loadUSDtoBNB(value);
+            }}
+            keyboardType="numeric"
           />
         </View>
         <Text
@@ -90,7 +113,7 @@ export default function BusinessExchange({ navigator }) {
               fontFamily: "Manjari-Regular",
             }}
           >
-            0.03064
+            {TextusdToBnb.toFixed(6)}
           </Text>
           <Text
             style={{
@@ -128,21 +151,27 @@ export default function BusinessExchange({ navigator }) {
               fontFamily: "Manjari-Regular",
             }}
           >
-            0.08942
+            {balanceBNB.toFixed(6)}
           </Text>
         </View>
       </View>
-      <TouchableOpacity
-        style={styles.buttonNext}
-        // onPress={navigator.navigate("Login")}
-      >
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonCancel}
         onPress={() => Keyboard.dismiss()}
       >
         <Text style={styles.buttonText}>Cancel</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.buttonNext}
+        onPress={() => {
+          navigation.replace("Payment", {
+            wallet: wallet,
+            amount: TextusdToBnb,
+            currency: currency,
+          }); //wallet, amount
+        }}
+      >
+        <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -195,7 +224,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "35%",
     height: "8%",
-    left: "10%",
+    right: "10%",
     top: "78%",
     backgroundColor: "rgba(206, 155, 230, 0.15)",
     borderColor: "#CA34FF",
@@ -208,7 +237,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "35%",
     height: "8%",
-    right: "10%",
+    left: "10%",
     top: "78%",
     backgroundColor: "rgba(206, 155, 230, 0.15)",
     borderColor: "#CA34FF",

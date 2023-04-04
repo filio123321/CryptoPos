@@ -5,7 +5,7 @@ import * as Font from "expo-font";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BusinessExchangeScreen from "./screens/BusinessExchangeScreen";
-
+import Payment from "./screens/Payment";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -46,6 +46,34 @@ export default function App() {
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("Login")}
+                style={{ marginLeft: 10 }}
+              >
+                <Image source={require("./assets/back.png")} />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="Payment"
+          component={Payment}
+          options={({ navigation }) => ({
+            headerShown: true,
+            headerTitle: "Crypto Pay",
+            headerTintColor: "#CA34FF",
+            headerStyle: {
+              backgroundColor: "#1E1E1E",
+              shadowOffset: { height: 0, width: 0 },
+              elevation: 0,
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 30,
+              fontFamily: "Manjari-Regular",
+              marginTop: 10,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("BusinessExchange")}
                 style={{ marginLeft: 10 }}
               >
                 <Image source={require("./assets/back.png")} />
