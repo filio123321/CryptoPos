@@ -6,16 +6,20 @@ import {
   TouchableOpacity,
   Clipboard,
   Share,
+  Dimensions,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import QRCode from "react-native-qrcode-svg";
 import * as Font from "expo-font";
+
+const windowWidth = Dimensions.get("window").width;
+const qrCodeHeight = windowWidth * 0.8;
 
 export default function Payment(props) {
   const wallet = props.route.params.wallet;
   const amount = props.route.params.amount;
   const currency = props.route.params.currency;
-  console.log(amount);
-  console.log(wallet);
+  const uri = `${currency}:${wallet}?amount=${amount}`;
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
@@ -47,7 +51,15 @@ export default function Payment(props) {
         <Text style={styles.walletAddress}>{wallet}</Text>
       </View>
 
-      <View style={styles.qrCode}></View>
+      <View style={styles.qrCode}>
+        <QRCode
+          value={uri}
+          size={windowWidth * 0.79}
+          color="#000000"
+          backgroundColor="#ffffff"
+          logo={{ uri: "https://example.com/logo.png" }}
+        />
+      </View>
       <TouchableOpacity style={styles.nfcButton}>
         <Text style={styles.buttonText}>Use NFC</Text>
       </TouchableOpacity>
@@ -107,13 +119,15 @@ const styles = StyleSheet.create({
     marginBottom: "0%",
   },
   qrCode: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     boxSizing: "border-box",
     position: "absolute",
     width: "80%",
-    height: "44%",
+    height: qrCodeHeight,
     left: "10%",
     top: "29%",
-    // backgroundColor: 'url(image.png)',
     borderWidth: 2,
     borderColor: "#CA34FF",
   },
