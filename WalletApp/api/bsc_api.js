@@ -26,10 +26,54 @@ export const bnbTousd = async (bnb) => {
   }
 };
 
+export const btcTousd = async (btc) => {
+  try {
+    const url = `https://api.coincap.io/v2/assets/bitcoin`;
+    const response = await axios.get(url);
+    console.log(response.data.data.priceUsd * btc);
+    return response.data.data.priceUsd * btc;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const ethTousd = async (eth) => {
+  try {
+    const url = `https://api.coincap.io/v2/assets/ethereum`;
+    const response = await axios.get(url);
+    console.log(response.data.data.priceUsd * eth);
+    return response.data.data.priceUsd * eth;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const usdToBnb = async (usdAmount) => {
   try {
     const bnbPrice = await bnbTousd(1);
     return usdAmount / bnbPrice;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const usdToEth = async (usdAmount) => {
+  try {
+    const ethPrice = await ethTousd(1);
+    return usdAmount / ethPrice;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const usdToBtc = async (usdAmount) => {
+  try {
+    const btcPrice = await btcTousd(1);
+    return usdAmount / btcPrice;
   } catch (error) {
     console.error(error);
     throw error;

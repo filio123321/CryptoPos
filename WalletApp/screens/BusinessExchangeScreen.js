@@ -7,36 +7,58 @@ import {
   Platform,
   View,
   Keyboard,
+  Modal,
 } from "react-native";
 import * as Font from "expo-font";
-import { getAddressBalance, usdToBnb } from "../api/bsc_api";
+import {
+  getAddressBalance,
+  usdToBnb,
+  usdToBtc,
+  usdToEth,
+} from "../api/bsc_api";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 export default function BusinessExchange({ navigator }) {
   const navigation = useNavigation();
-  const [balanceBNB, setBalanceBNB] = useState(0);
+  const [balanceCurrency, setBalanceCurrency] = useState(0);
   const [TextusdToBnb, setUsdBNB] = useState(0);
   const wallet = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
-  const currency = "BNB";
+  const [currency, setCurrency] = useState("BNB");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [value, setValue] = useState(10);
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
 
-  async function loadUSDtoBNB(input) {
-    const bnbAmount = await usdToBnb(input);
-    setUsdBNB(bnbAmount);
+  async function loadUSDtoCurrency(input) {
+    if (currency == "BNB") {
+      const bnbAmount = await usdToBnb(input);
+      setUsdBNB(bnbAmount);
+    } else if (currency == "BTC") {
+      console.log("BTC");
+      const btcAmount = await usdToBtc(input);
+      setUsdBNB(btcAmount);
+    } else if (currency == "ETH") {
+      console.log("ETH");
+      const ethAmount = await usdToEth(input);
+      setUsdBNB(ethAmount);
+    }
   }
   useEffect(() => {
     getAddressBalance(wallet)
       .then((balance) => {
-        setBalanceBNB(balance / 1000000000000000000);
+        setBalanceCurrency(balance / 1000000000000000000);
       })
       .catch((error) => {
         console.error(error);
       });
-    loadUSDtoBNB(10);
+    loadUSDtoCurrency(10);
   }, []);
+
+  useEffect(() => {
+    loadUSDtoCurrency(value);
+  }, [value, currency]);
 
   if (!fontsLoaded) {
     return null;
@@ -48,10 +70,52 @@ export default function BusinessExchange({ navigator }) {
       style={styles.container}
       keyboardVerticalOffset={30}
     >
-      <View style={styles.viewContainer}>
-        <View style={styles.coinContainer}>
-          <Text style={styles.coinText}>BNB</Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <TouchableOpacity
+            style={{ padding: 5 }}
+            onPress={() => {
+              setModalVisible(false);
+              setCurrency("BNB");
+            }}
+          >
+            <Text style={styles.buttonText}>BNB</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ padding: 5 }}
+            onPress={() => {
+              setModalVisible(false);
+              setCurrency("BTC");
+            }}
+          >
+            <Text style={styles.buttonText}>BTC</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ padding: 5 }}
+            onPress={() => {
+              setModalVisible(false);
+              setCurrency("ETH");
+            }}
+          >
+            <Text style={styles.buttonText}>ETH</Text>
+          </TouchableOpacity>
         </View>
+      </Modal>
+      <View style={styles.viewContainer}>
+        <TouchableOpacity
+          style={styles.coinContainer}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.coinText}>{currency}</Text>
+        </TouchableOpacity>
         <View
           style={{
             position: "absolute",
@@ -79,7 +143,8 @@ export default function BusinessExchange({ navigator }) {
             placeholder="10"
             placeholderTextColor="#fff"
             onChangeText={(value) => {
-              loadUSDtoBNB(value);
+              setValue(value);
+              loadUSDtoCurrency(value);
             }}
             keyboardType="numeric"
           />
@@ -122,7 +187,7 @@ export default function BusinessExchange({ navigator }) {
               fontFamily: "Manjari-Regular",
             }}
           >
-            BNB
+            {currency}
           </Text>
         </View>
         <View
@@ -151,7 +216,7 @@ export default function BusinessExchange({ navigator }) {
               fontFamily: "Manjari-Regular",
             }}
           >
-            {balanceBNB.toFixed(6)}
+            {balanceCurrency.toFixed(6)}
           </Text>
         </View>
       </View>
@@ -168,7 +233,7 @@ export default function BusinessExchange({ navigator }) {
             wallet: wallet,
             amount: TextusdToBnb,
             currency: currency,
-          }); //wallet, amount
+          });
         }}
       >
         <Text style={styles.buttonText}>Next</Text>
@@ -184,6 +249,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  modalView: {
+    marginTop: "40%",
+    width: "50%",
+    backgroundColor: "#1E1E1E",
+    borderColor: "#CA34FF",
+    borderRadius: 20,
+    borderWidth: 3,
+    padding: 35,
+    alignItems: "center",
+    alignSelf: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
   viewContainer: {
     position: "absolute",
     top: "7%",
