@@ -15,6 +15,9 @@ import {
   usdToBnb,
   usdToBtc,
   usdToEth,
+  getAddressBalanceBTC,
+  getAddressBalanceETH,
+  getAddressBalanceBNB,
 } from "../api/bsc_api";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -23,7 +26,9 @@ export default function BusinessExchange({ navigator }) {
   const navigation = useNavigation();
   const [balanceCurrency, setBalanceCurrency] = useState(0);
   const [TextusdToBnb, setUsdBNB] = useState(0);
-  const wallet = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
+  const walletBNB = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
+  const walletBTC = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2";
+  const walletETH = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
   const [currency, setCurrency] = useState("BNB");
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState(10);
@@ -36,29 +41,38 @@ export default function BusinessExchange({ navigator }) {
       const bnbAmount = await usdToBnb(input);
       setUsdBNB(bnbAmount);
     } else if (currency == "BTC") {
-      console.log("BTC");
       const btcAmount = await usdToBtc(input);
       setUsdBNB(btcAmount);
     } else if (currency == "ETH") {
-      console.log("ETH");
       const ethAmount = await usdToEth(input);
       setUsdBNB(ethAmount);
     }
   }
+
+  async function loadAddressBalance() {
+    if (currency == "BNB") {
+      const bnbAmount = await getAddressBalanceBNB(walletBNB);
+      setBalanceCurrency(bnbAmount / 1000000000000000000);
+    } else if (currency == "BTC") {
+      const btcAmount = await getAddressBalanceBTC(walletBTC);
+      setBalanceCurrency(btcAmount / 100000000);
+    } else if (currency == "ETH") {
+      const ethAmount = await getAddressBalanceETH(walletETH);
+      setBalanceCurrency(ethAmount / 1000000000000000000);
+    }
+  }
   useEffect(() => {
-    getAddressBalance(wallet)
-      .then((balance) => {
-        setBalanceCurrency(balance / 1000000000000000000);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    loadAddressBalance();
     loadUSDtoCurrency(10);
   }, []);
 
   useEffect(() => {
     loadUSDtoCurrency(value);
   }, [value, currency]);
+
+  useEffect(() => {
+    loadAddressBalance();
+  }, [currency]);
 
   if (!fontsLoaded) {
     return null;
@@ -229,6 +243,13 @@ export default function BusinessExchange({ navigator }) {
       <TouchableOpacity
         style={styles.buttonNext}
         onPress={() => {
+          if (currency == "BNB") {
+            var wallet = walletBNB;
+          } else if (currency == "BTC") {
+            var wallet = walletBTC;
+          } else if (currency == "ETH") {
+            var wallet = walletETH;
+          }
           navigation.replace("Payment", {
             wallet: wallet,
             amount: TextusdToBnb,

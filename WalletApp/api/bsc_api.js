@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getAddressBalance = (address) => {
+export const getAddressBalanceBNB = (address) => {
   const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&apikey=KU2R2B8SZ7GW3QKRWCIWGZDS13UX16XC9T`;
 
   return fetch(url)
@@ -11,7 +11,36 @@ export const getAddressBalance = (address) => {
     })
     .catch((error) => {
       console.error(error);
-      throw error;
+      return 0;
+    });
+};
+
+export const getAddressBalanceETH = (address) => {
+  const url = `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=QDD2GKAHRKWYF2ITZ6PBYRRRUBMB49652Y`;
+
+  return fetch(url)
+    .then((response) => response.json())
+    .then((json) => {
+      return json.result;
+    })
+    .catch((error) => {
+      console.error(error);
+      return 0;
+    });
+};
+
+export const getAddressBalanceBTC = (address) => {
+  const url = `https://blockchain.info/balance?active=${address}`;
+
+  return fetch(url)
+    .then((response) => response.json())
+    .then((json) => {
+      const balance = json[address].final_balance;
+      return balance;
+    })
+    .catch((error) => {
+      console.error(error);
+      return 0;
     });
 };
 
@@ -30,7 +59,6 @@ export const btcTousd = async (btc) => {
   try {
     const url = `https://api.coincap.io/v2/assets/bitcoin`;
     const response = await axios.get(url);
-    console.log(response.data.data.priceUsd * btc);
     return response.data.data.priceUsd * btc;
   } catch (error) {
     console.error(error);
@@ -42,7 +70,6 @@ export const ethTousd = async (eth) => {
   try {
     const url = `https://api.coincap.io/v2/assets/ethereum`;
     const response = await axios.get(url);
-    console.log(response.data.data.priceUsd * eth);
     return response.data.data.priceUsd * eth;
   } catch (error) {
     console.error(error);
