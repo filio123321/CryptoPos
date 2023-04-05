@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export const getAddressBalanceBNB = (address) => {
   const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&apikey=KU2R2B8SZ7GW3QKRWCIWGZDS13UX16XC9T`;
 
@@ -107,43 +106,60 @@ export const usdToBtc = async (usdAmount) => {
   }
 };
 
-export default function BNBTransaction(senderAddress, privateKey, json) {
+export const BNBTransaction = (data) => {
   const Web3 = require("web3");
-  const web3 = new Web3(
-    new Web3.providers.HttpProvider("https://bsc-dataseed1.binance.org:443")
-  );
 
-  const recipient = JSON.parse(json);
-  const amountToSend = web3.utils.toWei(recipient.amount, "ether");
-
-  async function sendTransaction() {
-    const gasPrice = await web3.eth.getGasPrice();
-    const nonce = await web3.eth.getTransactionCount(senderAddress);
-    const gasLimit = 21000;
-
-    const transactionObject = {
-      from: senderAddress,
-      to: recipient.address,
-      value: amountToSend,
-      gasPrice: gasPrice,
-      gasLimit: gasLimit,
-      nonce: nonce,
-    };
-
-    // Sign the transaction with the sender's private key
-    const signedTransaction = await web3.eth.accounts.signTransaction(
-      transactionObject,
-      privateKey
+  const sendBNBTransaction = async (
+    senderAddress,
+    privateKey,
+    recipientAddress,
+    amountToSend
+  ) => {
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider("https://bsc-dataseed1.binance.org:443")
     );
+    const amountInWei = web3.utils.toWei(amountToSend, "ether");
+    console.log("amountInWei", amountInWei);
 
-    // Send the signed transaction to the BSC network
-    const transactionReceipt = await web3.eth.sendSignedTransaction(
-      signedTransaction.rawTransaction
-    );
+    try {
+      const gasPrice = await web3.eth.getGasPrice();
+      const nonce = await web3.eth.getTransactionCount(senderAddress);
+      const gasLimit = 21000;
 
-    console.log(
-      `Transaction sent with hash: ${transactionReceipt.transactionHash}`
-    );
-  }
-  sendTransaction();
-}
+      const transactionObject = {
+        from: senderAddress,
+        to: recipientAddress,
+        value: amountInWei,
+        gasPrice: gasPrice,
+        gasLimit: gasLimit,
+        nonce: nonce,
+      };
+      console.log(transactionObject);
+      const signedTransaction = await web3.eth.accounts.signTransaction(
+        transactionObject,
+        privateKey
+      );
+
+      const transactionReceipt = await web3.eth.sendSignedTransaction(
+        signedTransaction.rawTransaction
+      );
+
+      console.log(
+        `Transaction sent with hash: ${transactionReceipt.transactionHash}`
+      );
+    } catch (error) {
+      console.error(`Error sending transaction: ${error}`);
+    }
+  };
+
+  // Example usage:
+  const senderAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+  const privateKey =
+    "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
+  const recipient = JSON.parse(data);
+  console.log(recipient);
+  const recipientAddress = recipient.wallet;
+  const amountToSend = `${recipient.amount.toFixed(18)}`;
+
+  sendBNBTransaction(senderAddress, privateKey, recipientAddress, amountToSend);
+};

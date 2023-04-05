@@ -26,7 +26,7 @@ export default function BusinessExchange({ navigator }) {
   const navigation = useNavigation();
   const [balanceCurrency, setBalanceCurrency] = useState(0);
   const [TextusdToBnb, setUsdBNB] = useState(0);
-  const walletBNB = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
+  const walletBNB = "0x3419e472f6bA86d5668c8568a26b6323c2A61A46";
   const walletBTC = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2";
   const walletETH = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
   const [currency, setCurrency] = useState("BNB");

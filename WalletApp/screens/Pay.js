@@ -2,31 +2,78 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
-  Clipboard,
-  Share,
   Dimensions,
+  Button,
 } from "react-native";
-import React from "react";
-import { QRCodeScanner } from "react-native-qrcode-scanner";
 import * as Font from "expo-font";
+import React, { useState, useEffect } from "react";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { BNBTransaction } from "../api/bsc_api";
 
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
 export default function Pay() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
   const mywallet = "address";
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
   if (!fontsLoaded) {
     return null;
   }
 
-  handleQRCodeScan = (event) => {
-    console.log(event.data);
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    console.log(data);
+    BNBTransaction(data);
   };
+
+  if (hasPermission === null) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.wallet}>
+          <Text style={styles.walletText}>My wallet address:</Text>
+          <Text style={styles.walletAddress}>{mywallet}</Text>
+        </View>
+        <View style={styles.qrCode}>
+          <Text style={styles.buttonText}>
+            Requesting for camera permissions.
+          </Text>
+        </View>
+        <TouchableOpacity style={styles.nfcButton}>
+          <Text style={styles.buttonText}>Use NFC</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+  if (hasPermission === false) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.wallet}>
+          <Text style={styles.walletText}>My wallet address:</Text>
+          <Text style={styles.walletAddress}>{mywallet}</Text>
+        </View>
+        <View style={styles.qrCode}>
+          <Text style={styles.buttonText}>No access to camera.</Text>
+        </View>
+        <TouchableOpacity style={styles.nfcButton}>
+          <Text style={styles.buttonText}>Use NFC</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -35,7 +82,16 @@ export default function Pay() {
         <Text style={styles.walletAddress}>{mywallet}</Text>
       </View>
       <View style={styles.qrCode}>
-        <QRCodeScanner onRead={this.handleQRCodeScan} />
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+        {scanned && (
+          <Button
+            title={"Tap to Scan Again"}
+            onPress={() => setScanned(false)}
+          />
+        )}
       </View>
       <TouchableOpacity style={styles.nfcButton}>
         <Text style={styles.buttonText}>Use NFC</Text>

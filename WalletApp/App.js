@@ -2,14 +2,17 @@ import { Image, TouchableOpacity, Keyboard } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as Font from "expo-font";
+import "./ global";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BusinessExchangeScreen from "./screens/BusinessExchangeScreen";
 import Payment from "./screens/Payment";
 import Pay from "./screens/Pay";
+import { LogBox } from "react-native";
 const Stack = createStackNavigator();
 
 export default function App() {
+  LogBox.ignoreAllLogs();
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("./assets/fonts/Manjari-Regular.ttf"),
   });

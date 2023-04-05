@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as Font from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+import { BNBTransaction } from "../api/bsc_api";
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [fontsLoaded, error] = Font.useFonts({
@@ -18,6 +19,7 @@ export default function LoginScreen() {
   const PersonalRedirect = () => {
     navigation.replace("Pay");
   };
+
   return (
     <View style={styles.container}>
       <View>
