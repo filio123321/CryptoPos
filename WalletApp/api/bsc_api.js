@@ -106,3 +106,44 @@ export const usdToBtc = async (usdAmount) => {
     throw error;
   }
 };
+
+export default function BNBTransaction(senderAddress, privateKey, json) {
+  const Web3 = require("web3");
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("https://bsc-dataseed1.binance.org:443")
+  );
+
+  const recipient = JSON.parse(json);
+  const amountToSend = web3.utils.toWei(recipient.amount, "ether");
+
+  async function sendTransaction() {
+    const gasPrice = await web3.eth.getGasPrice();
+    const nonce = await web3.eth.getTransactionCount(senderAddress);
+    const gasLimit = 21000;
+
+    const transactionObject = {
+      from: senderAddress,
+      to: recipient.address,
+      value: amountToSend,
+      gasPrice: gasPrice,
+      gasLimit: gasLimit,
+      nonce: nonce,
+    };
+
+    // Sign the transaction with the sender's private key
+    const signedTransaction = await web3.eth.accounts.signTransaction(
+      transactionObject,
+      privateKey
+    );
+
+    // Send the signed transaction to the BSC network
+    const transactionReceipt = await web3.eth.sendSignedTransaction(
+      signedTransaction.rawTransaction
+    );
+
+    console.log(
+      `Transaction sent with hash: ${transactionReceipt.transactionHash}`
+    );
+  }
+  sendTransaction();
+}
