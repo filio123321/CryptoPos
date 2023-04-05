@@ -8,7 +8,7 @@ import {
   Share,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import QRCode from "react-native-qrcode-svg";
 import * as Font from "expo-font";
 
@@ -20,7 +20,6 @@ export default function Payment(props) {
   const amount = props.route.params.amount;
   const currency = props.route.params.currency;
   const message = `{"amount": ${amount}, "currency": "${currency}", "wallet": "${wallet}"}`;
-
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });

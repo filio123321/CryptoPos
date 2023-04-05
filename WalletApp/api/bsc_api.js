@@ -106,7 +106,7 @@ export const usdToBtc = async (usdAmount) => {
   }
 };
 
-export const BNBTransaction = (data) => {
+export const BNBTransaction = async (data) => {
   const Web3 = require("web3");
 
   const sendBNBTransaction = async (
@@ -147,8 +147,10 @@ export const BNBTransaction = (data) => {
       console.log(
         `Transaction sent with hash: ${transactionReceipt.transactionHash}`
       );
+      return true;
     } catch (error) {
       console.error(`Error sending transaction: ${error}`);
+      return false;
     }
   };
 
@@ -159,7 +161,12 @@ export const BNBTransaction = (data) => {
   const recipient = JSON.parse(data);
   console.log(recipient);
   const recipientAddress = recipient.wallet;
-  const amountToSend = `${recipient.amount.toFixed(18)}`;
-
-  sendBNBTransaction(senderAddress, privateKey, recipientAddress, amountToSend);
+  const amountToSend = `${recipient.amount.toFixed(9)}`;
+  const result = sendBNBTransaction(
+    senderAddress,
+    privateKey,
+    recipientAddress,
+    amountToSend
+  );
+  return result;
 };

@@ -5,18 +5,24 @@ import {
   TouchableOpacity,
   Dimensions,
   Button,
+  Modal,
 } from "react-native";
 import * as Font from "expo-font";
 import React, { useState, useEffect } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { BNBTransaction } from "../api/bsc_api";
+import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
 export default function Pay() {
+  const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
+  const [modalText, setModalText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
   const mywallet = "address";
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
@@ -30,14 +36,24 @@ export default function Pay() {
 
     getBarCodeScannerPermissions();
   }, []);
+
+  useEffect(() => {
+    if (isSuccessful) {
+      setModalText("The transaction was successful!");
+    } else {
+      setModalText("The transaction was not successful!");
+    }
+  }, [isSuccessful]);
+
   if (!fontsLoaded) {
     return null;
   }
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    console.log(data);
-    BNBTransaction(data);
+    const result = await BNBTransaction(data);
+    setIsSuccessful(result);
+    setModalVisible(true);
   };
 
   if (hasPermission === null) {
@@ -77,6 +93,30 @@ export default function Pay() {
 
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Text style={[styles.buttonText, { padding: 10, marginBottom: 10 }]}>
+            {modalText}
+          </Text>
+          <TouchableOpacity
+            style={styles.buttonClose}
+            onPress={() => {
+              setModalVisible(false);
+              navigation.replace("Login");
+            }}
+          >
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       <View style={styles.wallet}>
         <Text style={styles.walletText}>My wallet address:</Text>
         <Text style={styles.walletAddress}>{mywallet}</Text>
@@ -105,6 +145,38 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#1E1E1E",
   },
+  modalView: {
+    marginTop: "40%",
+    width: "70%",
+    backgroundColor: "#1E1E1E",
+    borderColor: "#CA34FF",
+    borderRadius: 20,
+    borderWidth: 3,
+    padding: 35,
+    alignItems: "center",
+    alignSelf: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    height: "30%",
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonClose: {
+    backgroundColor: "rgba(206, 155, 230, 0.15)",
+    borderWidth: 3,
+    borderColor: "#CA34FF",
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "50%",
+    height: "20%",
+    marginTop: "20%",
+  },
+
   wallet: {
     position: "absolute",
     width: "80%",
