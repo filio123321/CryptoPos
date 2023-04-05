@@ -9,57 +9,33 @@ import {
   Dimensions,
 } from "react-native";
 import React from "react";
-import QRCode from "react-native-qrcode-svg";
+import { QRCodeScanner } from "react-native-qrcode-scanner";
 import * as Font from "expo-font";
 
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
-export default function Payment(props) {
-  const wallet = props.route.params.wallet;
-  const amount = props.route.params.amount;
-  const currency = props.route.params.currency;
-  const message = `{"amount": ${amount}, "currency": "${currency}", "wallet": "${wallet}"}`;
-
+export default function Pay() {
+  const mywallet = "address";
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
   if (!fontsLoaded) {
     return null;
   }
+
+  handleQRCodeScan = (event) => {
+    console.log(event.data);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wallet}>
-        <Text style={styles.walletText}>Wallet address:</Text>
-        <TouchableOpacity
-          style={styles.walletButtonCopy}
-          onPress={() => {
-            Clipboard.setString(wallet);
-          }}
-        >
-          <Image source={require("../assets/Copy.png")} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.walletButtonShare}
-          onPress={() => {
-            Share.share({
-              message: json,
-            });
-          }}
-        >
-          <Image source={require("../assets/Share.png")} />
-        </TouchableOpacity>
-        <Text style={styles.walletAddress}>{wallet}</Text>
+        <Text style={styles.walletText}>My wallet address:</Text>
+        <Text style={styles.walletAddress}>{mywallet}</Text>
       </View>
-
       <View style={styles.qrCode}>
-        <QRCode
-          value={message}
-          size={windowWidth * 0.79}
-          color="#000000"
-          backgroundColor="#ffffff"
-          logo={{ uri: "https://example.com/logo.png" }}
-        />
+        <QRCodeScanner onRead={this.handleQRCodeScan} />
       </View>
       <TouchableOpacity style={styles.nfcButton}>
         <Text style={styles.buttonText}>Use NFC</Text>
