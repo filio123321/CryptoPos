@@ -127,10 +127,9 @@ export default function Pay() {
           style={StyleSheet.absoluteFillObject}
         />
         {scanned && (
-          <Button
-            title={"Tap to Scan Again"}
-            onPress={() => setScanned(false)}
-          />
+          <TouchableOpacity onPress={() => setScanned(false)}>
+            <Text style={styles.buttonText}>Tap to Scan Again</Text>
+          </TouchableOpacity>
         )}
       </View>
       <TouchableOpacity style={styles.nfcButton}>
