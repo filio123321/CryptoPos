@@ -2,10 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as SecureStore from 'expo-secure-store';
 
 
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
+import Recieve from './screens/Recieve';
 
 
 const Stack = createStackNavigator();
@@ -27,7 +29,7 @@ export default function App() {
 
 
           <Stack.Screen
-            name="Home"
+            name="Personal Home"
             component={HomeScreen}
             options={{
               title: 'Wallet balance',
@@ -36,10 +38,23 @@ export default function App() {
               headerTitleStyle: { fontWeight: 'bold' },
               headerShadowVisible: false, 
               // headerTransparent: true,
+              headerLeft: null,
             }}
           />
 
-          
+          <Stack.Screen
+            name="Recieve"
+            component={Recieve}
+            options={{
+              title: 'Recieve',
+              headerStyle: { backgroundColor: '#161616' },
+              headerTintColor: '#fff',
+              headerTitleStyle: { fontWeight: 'bold' },
+              headerShadowVisible: false, 
+              // headerTransparent: true,
+              // headerLeft: null,
+            }}
+          />
           
         </Stack.Navigator>
       </NavigationContainer>

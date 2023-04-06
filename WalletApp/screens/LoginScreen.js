@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import PagerView from 'react-native-pager-view';
 import { ImageBackground, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useEffect, useRef } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from 'expo-secure-store';
 
 
 
 
 export default function LoginScreen() {
+    const navigation = useNavigation();
     const ref = useRef(PagerView);
 
     const [fontsLoaded, error] = useFonts({
@@ -22,6 +24,20 @@ export default function LoginScreen() {
     if (!fontsLoaded) {
         return null;
     }
+
+    const PersonalHandler = async () => {
+        try {
+          await SecureStore.setItemAsync('BNB_pubic', '0x260e69ab6665B9ef67b60674E265b5D21c88CB45');
+          
+          const value = await SecureStore.getItemAsync('BNB_pubic');
+          console.log(value);
+          
+          navigation.navigate('Personal Home');
+        } catch (error) {
+            alert(error);
+        }
+      }
+      
 
 
 
@@ -184,17 +200,12 @@ export default function LoginScreen() {
                         
                     }}>
                         <TouchableOpacity style={{backgroundColor: "rgba(206, 155, 230, 0.15)", borderColor: "#CA34FF", borderWidth: 3, borderRadius: 15, paddingHorizontal: 20, marginHorizontal: 10 }}><Text style={{ color: "white", padding: 10, fontFamily: "manjari", fontSize: 25 }}>Business</Text></TouchableOpacity>
-                        <TouchableOpacity style={{backgroundColor: "rgba(206, 155, 230, 0.15)", borderColor: "#CA34FF", borderWidth: 3, borderRadius: 15, paddingHorizontal: 20, marginHorizontal: 10 }}><Text style={{ color: "white", padding: 10, fontFamily: "manjari", fontSize: 25 }}>Personal</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={PersonalHandler} style={{backgroundColor: "rgba(206, 155, 230, 0.15)", borderColor: "#CA34FF", borderWidth: 3, borderRadius: 15, paddingHorizontal: 20, marginHorizontal: 10 }}><Text style={{ color: "white", padding: 10, fontFamily: "manjari", fontSize: 25 }}>Personal</Text></TouchableOpacity>
                 </View>
                 </Text>
                 
             </Text>
-        
-            
-            
-        
         </LinearGradient>
-
     </PagerView>
     );
     }

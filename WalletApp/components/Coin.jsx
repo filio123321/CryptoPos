@@ -3,14 +3,21 @@ import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
 import { cryptoSymbol } from 'crypto-symbol'
 import { useState, useEffect } from 'react';
 import { VictoryLine } from "victory-native";
+import * as SecureStore from 'expo-secure-store';
+import { getAddressBalance, bnbTousd } from '.././api/bsc_api';
+
 
 
 const { nameLookup } = cryptoSymbol({})
 
 
 const Coin = (props) => {
+  const walletBalance = props.walletBalance;
+  const setWalletBalance = props.setWalletBalance;
+
+  const [balance, setBalance] = useState(0);
   const [chartData, setChartData] = useState([{x: 0, y: 0}]);
-  const [coinPrice, setCoinPrice] = useState('...');
+  const [coinPrice, setCoinPrice] = useState(undefined);
   const [changePrice, setChangePrice] = useState(0);
   const [changePriceColor, setChangePriceColor] = useState('#fff');
 
@@ -39,8 +46,36 @@ const Coin = (props) => {
       });
   }
 
+  const getCoinBalance = () => {
+    // get address from SecureStore BNB_pub
+    // address = SecureStore.getItemAsync('BNB_pub');
+    if (props.symbol.toUpperCase() == "BNB"){
+      address = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
+
+      console.log(address);
+
+      getAddressBalance(address).then((balance) => {
+        console.log(balance);
+        setBalance(balance / 1000000000000000000);
+
+        
+
+        setWalletBalance(walletBalance + bnbTousd(balance / 1000000000000000000));
+
+        console.log(walletBalance);
+      }).catch((error) => {
+        console.error(error);
+      });
+    }else{
+      setBalance(props.balance);
+    }
+    
+  }
+
   useEffect(() => {
     getCoinPrice()
+    // getCoinBalance();
+    setWalletBalance(walletBalance + coinPrice * props.balance);
   }, [props.balance])
   // do that but set interval to 5 seconds
 
@@ -95,6 +130,9 @@ const Coin = (props) => {
       });
   }, []);
 
+  if (!props.balance){
+    return null
+  }
 
 
   return (
@@ -136,7 +174,23 @@ const Coin = (props) => {
         <View style={styles.BalanceWrapper}>
           {/* <Text style={styles.BalanceTextUsd}>{props.balance}</Text>  */}
           {/* <Text style={styles.BalanceTextUsd}>{getCoinPrice()}</Text> */}
-          <Text style={styles.BalanceTextUsd}>{coinPrice === "..." ? "..." : coinPrice.toFixed(2)}</Text>
+
+          {/* check if coinPrice is undefined  */}
+
+          {/* ({coinPrice == undefined ? <Text>0</Text> : coinPrice.toFixed(2)}) */}
+
+          {/* <Text style={styles.BalanceTextUsd}>{coinPrice == undefined ? "0" : coinPrice.toFixed(2)}</Text> 
+          <Text style={styles.BalanceText}>{props.balance == undefined ? "0" : props.balance.toFixed(5)}</Text>  */}
+          
+          {/* <Text style={styles.BalanceTextUsd}>{coinPrice ? coinPrice.toFixed(2) : "0"}</Text> */}
+          {/* <Text style={styles.BalanceText}>{props.balance ? props.balance.toFixed(5) : "0"}</Text> */}
+
+          {/* <Text style={styles.BalanceTextUsd}>{coinPrice ? coinPrice.toFixed(2) : "0"}</Text>
+          <Text style={styles.BalanceText}>{typeof props.balance === "number" && !isNaN(props.balance) ? props.balance.toFixed(5) : "0"}</Text> */}
+
+          <Text style={styles.BalanceTextUsd}>{coinPrice ? (coinPrice * props.balance).toFixed(2) : "0"}</Text>
+          {/* <Text style={styles.BalanceTextUsd}>{coinPrice ? (balance).toFixed(2) : "0"}</Text> */}
+
           <Text style={styles.BalanceText}>{props.balance}</Text>
         </View>
 

@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { useNavigation } from "@react-navigation/native";
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import Coin from '../components/Coin';
 import { useEffect, useState } from 'react';
@@ -13,6 +12,7 @@ import { VictoryLine } from "victory-native";
 
 
 export default function HomeScreen() {
+    const navigation = useNavigation();
     const [balanceBNB, setBalanceBNB] = useState(0);
     const [balanceUSD, setBalanceUSD] = useState(0);
         // 0xc658595AB119817247539a000fdcF9f646bb65dc
@@ -22,24 +22,29 @@ export default function HomeScreen() {
             console.log("async", bnbPrice); // output the USD value of 10 BNB
           };
 
+    // useEffect(() => {
+    //     getAddressBalance('0x260e69ab6665B9ef67b60674E265b5D21c88CB45').then((balance) => {
+    //         console.log(balance);
+    //         setBalanceBNB(balance / 1000000000000000000);
+    //       }).catch((error) => {
+    //         console.error(error);
+    //       });
+    // }, []);
+
     useEffect(() => {
-        getAddressBalance('0x260e69ab6665B9ef67b60674E265b5D21c88CB45').then((balance) => {
-            console.log(balance);
-            setBalanceBNB(balance / 1000000000000000000);
-          }).catch((error) => {
-            console.error(error);
-          });
+        setBalanceBNB(0.00000000);
     }, []);
 
-    useEffect(() => {
-        const getBalanceUSD = async () => {
-            const balance = await bnbTousd(balanceBNB); // pass in your BNB balance here
-            setBalanceUSD(balance);
-        }
+    // useEffect(() => {
+    //     const getBalanceUSD = async () => {
+    //         const balance = await bnbTousd(balanceBNB); // pass in your BNB balance here
+    //         setBalanceUSD(balance);
+    //     }
 
-        getBalanceUSD();
-        console.log("SPLIT", balanceUSD);
-    }, [balanceBNB]);
+    //     // getBalanceUSD();
+    //     // setBalanceUSD(0.00000000);
+    //     // console.log("SPLIT", balanceUSD);
+    // }, [balanceBNB]);
 
 
     return (
@@ -51,7 +56,7 @@ export default function HomeScreen() {
                     <Text style={styles.BalanceText}>
                         $ {balanceUSD.toFixed(0)}
 
-                        {(balanceUSD == 0 ? null : <><Text>.</Text><Text style={styles.BalanceTextCents}>{balanceUSD.toString().split('.')[1].slice(0, 2)}</Text></>)}
+                        {/* {(balanceUSD == 0 ? null : < ><Text>.</Text><Text style={styles.BalanceTextCents}>{balanceUSD.toString().split('.')[1].slice(0, 2)}</Text></>)} */}
 
                     </Text>
                 </View>
@@ -69,7 +74,7 @@ export default function HomeScreen() {
                         style={styles.FunnctionalityButtonsWrapper}
                     >
                         <View style={{flexDirection: 'column', alignItems: 'center', margin: 10}}>
-                            <TouchableOpacity style={styles.FuncButton}>
+                            <TouchableOpacity onPress={() => {navigation.navigate("Recieve", {crypto: null})}} style={styles.FuncButton}>
                                 <Feather name="arrow-down-left" size={45} color="white" />
                             </TouchableOpacity>
                             <Text style={{color: 'white',  fontSize: 15, marginTop: 5}}>Recieve</Text>
@@ -123,10 +128,10 @@ export default function HomeScreen() {
                     </View>
 
                     <View style={styles.OwnedCoinsWrapper}>
-                        <Coin symbol='BTC' balance='0.0114'/>
-                        <Coin symbol='ETH' balance='1.066'/>
-                        <Coin symbol='XRP' balance='28.34621'/>
-                        <Coin symbol='BNB' balance='28.34621'/>
+                        <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        <Coin symbol='ETH' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        <Coin symbol='XRP' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        <Coin symbol='BNB' balance='0.8049473' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
                     </View>
 
                 
