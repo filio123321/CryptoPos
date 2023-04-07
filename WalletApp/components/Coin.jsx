@@ -15,6 +15,7 @@ const Coin = (props) => {
   const walletBalance = props.walletBalance;
   const setWalletBalance = props.setWalletBalance;
 
+  const [icon, setIcon] = useState(null);
   const [balance, setBalance] = useState(0);
   const [chartData, setChartData] = useState([{x: 0, y: 0}]);
   const [coinPrice, setCoinPrice] = useState(undefined);
@@ -26,7 +27,21 @@ const Coin = (props) => {
   const SYMBOL = `BINANCE:${props.symbol.toUpperCase()}USDT`;
   const RESOLUTION = '60';
 
-  const iconUrl = `https://cryptoicons.org/api/color/${props.symbol.toLowerCase()}/600/`
+  // const iconUrl = `https://cryptoicons.org/api/color/${props.symbol.toLowerCase()}/600/`
+
+  
+  // const icon = require('../assets/bitcoin.png');
+
+  useEffect(() => {
+    if (props.symbol.toUpperCase() === "BTC") {
+      setIcon(require("../assets/bitcoin.png"));
+    } else if (props.symbol.toUpperCase() === "ETH") {
+      setIcon(require("../assets/ethereum.png"));
+    } else {
+      setIcon(require("../assets/bnb.png"));
+    }
+  }, [props.symbol]);
+  
 
 
   const widthWithoutImage = '100% - 60'
@@ -137,7 +152,7 @@ const Coin = (props) => {
 
   return (
     <TouchableOpacity style={styles.container}>
-      <Image source={{ uri: iconUrl }} style={styles.icon} />
+      <Image source={icon} style={styles.icon} />
 
       <View style={styles.TextsWrapper}>
 

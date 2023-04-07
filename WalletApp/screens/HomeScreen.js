@@ -130,7 +130,7 @@ export default function HomeScreen() {
                     <View style={styles.OwnedCoinsWrapper}>
                         <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
                         <Coin symbol='ETH' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
-                        <Coin symbol='XRP' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        {/* <Coin symbol='XRP' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
                         <Coin symbol='BNB' balance='0.8049473' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
                     </View>
 
