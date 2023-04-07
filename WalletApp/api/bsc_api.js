@@ -158,8 +158,8 @@ export const BNBTransaction = async (data) => {
   const senderAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
   const privateKey =
     "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
+  console.log(data);
   const recipient = JSON.parse(data);
-  console.log(recipient);
   const recipientAddress = recipient.wallet;
   const amountToSend = `${recipient.amount.toFixed(9)}`;
   const result = sendBNBTransaction(

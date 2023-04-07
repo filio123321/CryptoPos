@@ -8,6 +8,7 @@ import LoginScreen from "./screens/LoginScreen";
 import BusinessExchangeScreen from "./screens/BusinessExchangeScreen";
 import Payment from "./screens/Payment";
 import Pay from "./screens/Pay";
+import SendCrypto from "./screens/SendCrypto";
 import { LogBox } from "react-native";
 const Stack = createStackNavigator();
 
@@ -35,6 +36,34 @@ export default function App() {
           options={({ navigation }) => ({
             headerShown: true,
             headerTitle: "Crypto Pay",
+            headerTintColor: "#CA34FF",
+            headerStyle: {
+              backgroundColor: "#1E1E1E",
+              shadowOffset: { height: 0, width: 0 },
+              elevation: 0,
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 30,
+              fontFamily: "Manjari-Regular",
+              marginTop: 10,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Login")}
+                style={{ marginLeft: 10 }}
+              >
+                <Image source={require("./assets/back.png")} />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="Send"
+          component={SendCrypto}
+          options={({ navigation }) => ({
+            headerShown: true,
+            headerTitle: "Send Crypto",
             headerTintColor: "#CA34FF",
             headerStyle: {
               backgroundColor: "#1E1E1E",

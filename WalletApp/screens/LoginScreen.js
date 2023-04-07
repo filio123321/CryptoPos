@@ -17,7 +17,7 @@ export default function LoginScreen() {
   };
 
   const PersonalRedirect = () => {
-    navigation.replace("Pay");
+    navigation.replace("Send");
   };
 
   return (
