@@ -1,4 +1,5 @@
 import axios from "axios";
+
 export const getAddressBalanceBNB = (address) => {
   const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&apikey=KU2R2B8SZ7GW3QKRWCIWGZDS13UX16XC9T`;
 
@@ -155,11 +156,12 @@ export const BNBTransaction = async (data) => {
   };
 
   // Example usage:
-  const senderAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
-  const privateKey =
-    "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
-  console.log(data);
   const recipient = JSON.parse(data);
+  const privateKey = recipient.privateKey;
+  const senderAddress = recipient.senderAddress;
+  // const senderAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+  // const privateKey =
+  //   "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
   const recipientAddress = recipient.wallet;
   const amountToSend = `${recipient.amount.toFixed(9)}`;
   const result = sendBNBTransaction(

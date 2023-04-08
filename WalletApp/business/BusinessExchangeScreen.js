@@ -22,11 +22,13 @@ import {
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function BusinessExchange({ navigator }) {
+export default function BusinessExchange(props) {
   const navigation = useNavigation();
   const [balanceCurrency, setBalanceCurrency] = useState(0);
   const [TextusdToBnb, setUsdBNB] = useState(0);
-  const walletBNB = "0x3419e472f6bA86d5668c8568a26b6323c2A61A46";
+  const walletBNB = props.route.params.wallet;
+  console.log(walletBNB);
+  const BNBprivateKey = props.route.params.privateKey;
   const walletBTC = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2";
   const walletETH = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
   const [currency, setCurrency] = useState("BNB");
@@ -254,6 +256,7 @@ export default function BusinessExchange({ navigator }) {
             wallet: wallet,
             amount: TextusdToBnb,
             currency: currency,
+            privateKey: BNBprivateKey,
           });
         }}
       >

@@ -27,7 +27,9 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 const height = Dimensions.get("window").height * 0.4;
 
 export default function SendCrypto() {
-  const walletBNB = "0x3419e472f6bA86d5668c8568a26b6323c2A61A46";
+  const walletBNB = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+  const privateKey =
+    "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
   const walletBTC = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2";
   const walletETH = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
   const [currency, setCurrency] = useState("BNB");
@@ -75,6 +77,7 @@ export default function SendCrypto() {
 
     getBarCodeScannerPermissions();
   }, []);
+
   useEffect(() => {
     loadAddressBalance();
   }, []);
@@ -93,9 +96,8 @@ export default function SendCrypto() {
   }, [isSuccessful]);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true);
-    setSendTo(data);
     console.log(data);
+    setSendTo(data);
     setModalQRVisible(false);
   };
 
@@ -231,7 +233,7 @@ export default function SendCrypto() {
             placeholder="Wallet Address"
             placeholderTextColor="#CA34FF"
             value={sendto}
-            onChange={(value) => setSendTo(value)}
+            onChangeText={(value) => setSendTo(value)}
           />
           <TouchableOpacity onPress={() => setModalQRVisible(true)}>
             <MaterialCommunityIcons name="qrcode-scan" size={24} color="grey" />
@@ -388,7 +390,7 @@ export default function SendCrypto() {
         style={[styles.button, { flexDirection: "row" }]}
         onPress={async () => {
           if (balance - amount >= 0) {
-            const json = `{"wallet": "${sendto}", "amount": ${amount}}`;
+            const json = `{"wallet": "${sendto}", "amount": ${amount}, "senderAddress": "${walletBNB}", "privateKey": "${privateKey}"}`;
             const result = await BNBTransaction(json);
             setIsSuccessful(result);
             setModalSuccessVisible(true);

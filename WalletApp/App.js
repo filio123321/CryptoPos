@@ -5,9 +5,10 @@ import * as Font from "expo-font";
 import "./ global";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
-import BusinessExchangeScreen from "./screens/BusinessExchangeScreen";
-import Payment from "./screens/Payment";
-import Pay from "./screens/Pay";
+import BusinessExchangeScreen from "./business/BusinessExchangeScreen";
+import Payment from "./business/Payment";
+import WalletScreenBusiness from "./business/WalletScreenBusiness";
+import WalletScreen from "./business/WalletScreenBusiness";
 import SendCrypto from "./screens/SendCrypto";
 import { LogBox } from "react-native";
 const Stack = createStackNavigator();
@@ -31,8 +32,36 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Pay"
-          component={Pay}
+          name="WalletScreen"
+          component={WalletScreen}
+          options={({ navigation }) => ({
+            headerShown: true,
+            headerTitle: "Crypto Pay",
+            headerTintColor: "#CA34FF",
+            headerStyle: {
+              backgroundColor: "#1E1E1E",
+              shadowOffset: { height: 0, width: 0 },
+              elevation: 0,
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 30,
+              fontFamily: "Manjari-Regular",
+              marginTop: 10,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Login")}
+                style={{ marginLeft: 10 }}
+              >
+                <Image source={require("./assets/back.png")} />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="WalletScreenBusiness"
+          component={WalletScreenBusiness}
           options={({ navigation }) => ({
             headerShown: true,
             headerTitle: "Crypto Pay",
@@ -86,6 +115,7 @@ export default function App() {
             ),
           })}
         />
+
         <Stack.Screen
           name="BusinessExchange"
           component={BusinessExchangeScreen}
@@ -118,7 +148,7 @@ export default function App() {
           name="Payment"
           component={Payment}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             headerTitle: "Crypto Pay",
             headerTintColor: "#CA34FF",
             headerStyle: {
@@ -133,10 +163,7 @@ export default function App() {
               marginTop: 10,
             },
             headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("BusinessExchange")}
-                style={{ marginLeft: 10 }}
-              >
+              <TouchableOpacity style={{ marginLeft: 10 }}>
                 <Image source={require("./assets/back.png")} />
               </TouchableOpacity>
             ),

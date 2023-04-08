@@ -11,58 +11,102 @@ import {
 import React, { useState } from "react";
 import QRCode from "react-native-qrcode-svg";
 import * as Font from "expo-font";
+import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
 export default function Payment(props) {
+  const navigation = useNavigation();
   const wallet = props.route.params.wallet;
+  const privateKey = props.route.params.privateKey;
   const amount = props.route.params.amount;
   const currency = props.route.params.currency;
   const message = `{"amount": ${amount}, "currency": "${currency}", "wallet": "${wallet}"}`;
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
+
   if (!fontsLoaded) {
     return null;
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.wallet}>
-        <Text style={styles.walletText}>Wallet address:</Text>
+    <View style={{ flex: 1, backgroundColor: "#1E1E1E" }}>
+      <View
+        style={{
+          backgroundColor: "#1E1E1E",
+          shadowOffset: { height: 0, width: 0 },
+          elevation: 0,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingHorizontal: 10,
+          height: 80,
+          marginTop: 30,
+        }}
+      >
         <TouchableOpacity
-          style={styles.walletButtonCopy}
-          onPress={() => {
-            Clipboard.setString(wallet);
+          onPress={() =>
+            navigation.replace("BusinessExchange", {
+              wallet: wallet,
+              BNBprivateKey: privateKey,
+            })
+          }
+          style={{ marginLeft: 10 }}
+        >
+          <Image source={require("../assets/back.png")} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "#CA34FF",
+            fontSize: 30,
+            fontFamily: "Manjari-Regular",
+            marginTop: 10,
+            textAlign: "center",
+            flex: 1,
           }}
         >
-          <Image source={require("../assets/Copy.png")} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.walletButtonShare}
-          onPress={() => {
-            Share.share({
-              message: json,
-            });
-          }}
-        >
-          <Image source={require("../assets/Share.png")} />
-        </TouchableOpacity>
-        <Text style={styles.walletAddress}>{wallet}</Text>
+          Crypto Pay
+        </Text>
+        <View style={{ width: 50 }} />
       </View>
+      <View style={styles.container}>
+        <View style={styles.wallet}>
+          <Text style={styles.walletText}>Wallet address:</Text>
+          <TouchableOpacity
+            style={styles.walletButtonCopy}
+            onPress={() => {
+              Clipboard.setString(wallet);
+            }}
+          >
+            <Image source={require("../assets/Copy.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.walletButtonShare}
+            onPress={() => {
+              Share.share({
+                message: json,
+              });
+            }}
+          >
+            <Image source={require("../assets/Share.png")} />
+          </TouchableOpacity>
+          <Text style={styles.walletAddress}>{wallet}</Text>
+        </View>
 
-      <View style={styles.qrCode}>
-        <QRCode
-          value={message}
-          size={windowWidth * 0.79}
-          color="#000000"
-          backgroundColor="#ffffff"
-          logo={{ uri: "https://example.com/logo.png" }}
-        />
+        <View style={styles.qrCode}>
+          <QRCode
+            value={message}
+            size={windowWidth * 0.79}
+            color="#000000"
+            backgroundColor="#ffffff"
+            logo={{ uri: "https://example.com/logo.png" }}
+          />
+        </View>
+        <TouchableOpacity style={styles.nfcButton}>
+          <Text style={styles.buttonText}>Use NFC</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.nfcButton}>
-        <Text style={styles.buttonText}>Use NFC</Text>
-      </TouchableOpacity>
     </View>
   );
 }
