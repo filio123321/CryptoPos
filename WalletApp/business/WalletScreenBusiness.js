@@ -15,7 +15,7 @@ import * as Clipboard from "expo-clipboard";
 import { Zocial, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
-
+import { ChekcValid } from "../api/bsc_api";
 export default function WalletScreen() {
   const [modalGenerate, setModalGenerate] = useState(false);
   const [modalCred, setModalCred] = useState(false);
@@ -49,6 +49,7 @@ export default function WalletScreen() {
     const address = "0x" + Buffer.from(hash.slice(-20)).toString("hex");
 
     setWalletBNB(address);
+    console.log(address, privateKey);
     setBNBprivateKey(privateKeyHex);
   }
 

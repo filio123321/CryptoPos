@@ -156,13 +156,9 @@ export const BNBTransaction = async (data) => {
     }
   };
 
-  // Example usage:
   const recipient = JSON.parse(data);
   const privateKey = recipient.privateKey;
   const senderAddress = recipient.senderAddress;
-  // const senderAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
-  // const privateKey =
-  //   "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
   const recipientAddress = recipient.wallet;
   const amountToSend = `${recipient.amount.toFixed(9)}`;
   const result = sendBNBTransaction(
@@ -175,16 +171,16 @@ export const BNBTransaction = async (data) => {
 };
 
 export const ChekcValid = (address, privateKey) => {
-  const web3 = new Web3("https://bsc-dataseed.binance.org"); // use BSC mainnet or testnet URL
+  const web3 = new Web3("https://bsc-dataseed.binance.org");
   let checkWallet = false;
   let checkKey = false;
+
   if (web3.utils.isAddress(address)) {
     checkWallet = true;
   } else {
     checkWallet = false;
   }
 
-  // check if the private key is valid
   try {
     const account = web3.eth.accounts.privateKeyToAccount(privateKey);
     checkKey = true;
@@ -194,6 +190,7 @@ export const ChekcValid = (address, privateKey) => {
   if (checkWallet && checkKey) {
     return true;
   } else {
+    console.log(checkWallet, checkKey);
     return false;
   }
 };
