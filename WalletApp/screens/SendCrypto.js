@@ -36,8 +36,9 @@ export default function SendCrypto() {
   const [modalQRVisible, setModalQRVisible] = useState(false);
   const [amount, setAmount] = useState(0);
   const [sendto, setSendTo] = useState("");
-  const [scanned, setScanned] = useState(false);
-  const [hasPermission, setHasPermission] = useState(null);
+  const [isSuccessful, setIsSuccessful] = useState(null);
+  const [modalText, setModalText] = useState("");
+  const [modalSuccessVisible, setModalSuccessVisible] = useState(false);
 
   async function loadAddressBalance() {
     if (currency == "BNB") {
@@ -54,9 +55,9 @@ export default function SendCrypto() {
 
   function loadImageButton() {
     if (currency == "BTC") {
-      return <Zocial name="bitcoin" size={24} color="black" />;
+      return <Zocial name="bitcoin" size={24} color="orange" />;
     } else if (currency == "ETH") {
-      return <FontAwesome5 name="ethereum" size={24} color="black" />;
+      return <FontAwesome5 name="ethereum" size={24} color="#fff" />;
     } else if (currency == "BNB") {
       return (
         <Image
@@ -70,7 +71,6 @@ export default function SendCrypto() {
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
     };
 
     getBarCodeScannerPermissions();
@@ -83,6 +83,14 @@ export default function SendCrypto() {
     loadAddressBalance();
     loadImageButton();
   }, [currency]);
+
+  useEffect(() => {
+    if (isSuccessful) {
+      setModalText("The transaction was successful!");
+    } else {
+      setModalText("The transaction was not successful!");
+    }
+  }, [isSuccessful]);
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
@@ -106,34 +114,39 @@ export default function SendCrypto() {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.modalView}>
-          <TouchableOpacity
-            style={{ padding: 5 }}
-            onPress={() => {
-              setModalVisible(false);
-              setCurrency("BNB");
-            }}
-          >
-            <Text style={styles.buttonText}>BNB</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ padding: 5 }}
-            onPress={() => {
-              setModalVisible(false);
-              setCurrency("BTC");
-            }}
-          >
-            <Text style={styles.buttonText}>BTC</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ padding: 5 }}
-            onPress={() => {
-              setModalVisible(false);
-              setCurrency("ETH");
-            }}
-          >
-            <Text style={styles.buttonText}>ETH</Text>
-          </TouchableOpacity>
+        <View style={styles.modalBackground}>
+          <View style={[styles.modalView, { height: "24%" }]}>
+            <TouchableOpacity
+              style={{ padding: 5 }}
+              onPress={() => {
+                setModalVisible(false);
+                setCurrency("BNB");
+              }}
+            >
+              <Image
+                source={require("../assets/bnb.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 5 }}
+              onPress={() => {
+                setModalVisible(false);
+                setCurrency("BTC");
+              }}
+            >
+              <Zocial name="bitcoin" size={30} color="orange" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 5 }}
+              onPress={() => {
+                setModalVisible(false);
+                setCurrency("ETH");
+              }}
+            >
+              <FontAwesome5 name="ethereum" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
 
@@ -162,16 +175,40 @@ export default function SendCrypto() {
                 backgroundColor: "#1E1E1E",
               },
             ]}
+            onPress={() => {
+              setModalQRVisible(false);
+            }}
           >
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalSuccessVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalSuccessVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalBackground}>
+          <View style={[styles.modalView, { height: "20%" }]}>
             <Text
-              style={styles.buttonText}
+              style={[styles.buttonText, { padding: 10, marginBottom: 10 }]}
+            >
+              {modalText}
+            </Text>
+            <TouchableOpacity
+              style={styles.buttonClose}
               onPress={() => {
-                setModalQRVisible(false);
+                setModalSuccessVisible(false);
               }}
             >
-              Close
-            </Text>
-          </TouchableOpacity>
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
       <View style={styles.wallet}>
@@ -347,22 +384,29 @@ export default function SendCrypto() {
         </View>
       </View>
 
-      <TouchableOpacity style={[styles.button, { flexDirection: "row" }]}>
-        <Text
-          style={styles.buttonText}
-          onPress={() => {
-            const json = `{"wallet": "${walletBNB}", "amount": ${amount}}`;
-            BNBTransaction(json);
-          }}
-        >
-          Send
-        </Text>
-        {/* <FontAwesome
+      <TouchableOpacity
+        style={[styles.button, { flexDirection: "row" }]}
+        onPress={async () => {
+          if (balance - amount >= 0) {
+            const json = `{"wallet": "${sendto}", "amount": ${amount}}`;
+            const result = await BNBTransaction(json);
+            setIsSuccessful(result);
+            setModalSuccessVisible(true);
+          } else if (balance - amount < 0) {
+            setModalText("Insufficient balance.");
+            setModalSuccessVisible(true);
+            console.log(modalText);
+          }
+        }}
+      >
+        <Text style={styles.buttonText}>Send</Text>
+        <FontAwesome
           name="send"
           size={24}
           color="gray"
-          style={{ marginLeft: "3%" }}r
-        /> */}
+          style={{ marginLeft: "3%" }}
+          r
+        />
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
