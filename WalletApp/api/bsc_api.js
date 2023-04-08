@@ -1,4 +1,5 @@
 import axios from "axios";
+import Web3 from "web3";
 
 export const getAddressBalanceBNB = (address) => {
   const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&apikey=KU2R2B8SZ7GW3QKRWCIWGZDS13UX16XC9T`;
@@ -171,4 +172,28 @@ export const BNBTransaction = async (data) => {
     amountToSend
   );
   return result;
+};
+
+export const ChekcValid = (address, privateKey) => {
+  const web3 = new Web3("https://bsc-dataseed.binance.org"); // use BSC mainnet or testnet URL
+  let checkWallet = false;
+  let checkKey = false;
+  if (web3.utils.isAddress(address)) {
+    checkWallet = true;
+  } else {
+    checkWallet = false;
+  }
+
+  // check if the private key is valid
+  try {
+    const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+    checkKey = true;
+  } catch (error) {
+    checkKey = false;
+  }
+  if (checkWallet && checkKey) {
+    return true;
+  } else {
+    return false;
+  }
 };

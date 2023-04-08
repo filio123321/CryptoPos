@@ -8,7 +8,7 @@ import LoginScreen from "./screens/LoginScreen";
 import BusinessExchangeScreen from "./business/BusinessExchangeScreen";
 import Payment from "./business/Payment";
 import WalletScreenBusiness from "./business/WalletScreenBusiness";
-import WalletScreen from "./business/WalletScreenBusiness";
+import WalletScreen from "./screens/WalletScreen";
 import SendCrypto from "./screens/SendCrypto";
 import { LogBox } from "react-native";
 const Stack = createStackNavigator();
@@ -147,26 +147,8 @@ export default function App() {
         <Stack.Screen
           name="Payment"
           component={Payment}
-          options={({ navigation }) => ({
+          options={() => ({
             headerShown: false,
-            headerTitle: "Crypto Pay",
-            headerTintColor: "#CA34FF",
-            headerStyle: {
-              backgroundColor: "#1E1E1E",
-              shadowOffset: { height: 0, width: 0 },
-              elevation: 0,
-            },
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 30,
-              fontFamily: "Manjari-Regular",
-              marginTop: 10,
-            },
-            headerLeft: () => (
-              <TouchableOpacity style={{ marginLeft: 10 }}>
-                <Image source={require("./assets/back.png")} />
-              </TouchableOpacity>
-            ),
           })}
         />
         <Stack.Screen

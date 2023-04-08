@@ -27,28 +27,7 @@ export default function WalletScreen() {
 
   const [walletETH, setWalletETH] = useState("");
 
-  // async function generateBscAddress() {
-  //   const privateKeyBytes = await Crypto.digestStringAsync(
-  //     Crypto.CryptoDigestAlgorithm.SHA256,
-  //     Math.random().toString()
-  //   );
-  //   const privateKeyHex = Buffer.from(privateKeyBytes, "base64").toString(
-  //     "hex"
-  //   );
-
-  //   const ec = new elliptic.ec("secp256k1");
-  //   const keyPair = ec.keyFromPrivate(privateKeyHex);
-  //   const publicKey = keyPair.getPublic().encode("hex");
-
-  //   const publicKeyBytes = Buffer.from(publicKey, "hex");
-  //   const hash = keccak256.arrayBuffer(publicKeyBytes);
-  //   const address = "0x" + Buffer.from(hash.slice(-20)).toString("hex");
-
-  //   setWalletBNB(address);
-  //   setBNBprivateKey(privateKeyHex);
-  // }
-
-  async function generateBtcAddress() {
+  async function generateBscAddress() {
     const privateKeyBytes = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
       Math.random().toString()
@@ -57,15 +36,36 @@ export default function WalletScreen() {
       "hex"
     );
 
-    const keyPair = bitcoin.ECPair.fromPrivateKey(
-      Buffer.from(privateKeyHex, "hex")
-    );
-    const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-    console.log(address);
-    console.log(privateKeyHex);
-    setWalletBTC(address);
-    setBTCprivateKey(privateKeyHex);
+    const ec = new elliptic.ec("secp256k1");
+    const keyPair = ec.keyFromPrivate(privateKeyHex);
+    const publicKey = keyPair.getPublic().encode("hex");
+
+    const publicKeyBytes = Buffer.from(publicKey, "hex");
+    const hash = keccak256.arrayBuffer(publicKeyBytes);
+    const address = "0x" + Buffer.from(hash.slice(-20)).toString("hex");
+
+    setWalletBNB(address);
+    setBNBprivateKey(privateKeyHex);
   }
+
+  // async function generateBtcAddress() {
+  //   const privateKeyBytes = await Crypto.digestStringAsync(
+  //     Crypto.CryptoDigestAlgorithm.SHA256,
+  //     Math.random().toString()
+  //   );
+  //   const privateKeyHex = Buffer.from(privateKeyBytes, "base64").toString(
+  //     "hex"
+  //   );
+
+  //   const keyPair = bitcoin.ECPair.fromPrivateKey(
+  //     Buffer.from(privateKeyHex, "hex")
+  //   );
+  //   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+  //   console.log(address);
+  //   console.log(privateKeyHex);
+  //   setWalletBTC(address);
+  //   setBTCprivateKey(privateKeyHex);
+  // }
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
