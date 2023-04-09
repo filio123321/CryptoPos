@@ -23,7 +23,7 @@ export default function Pay() {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [modalText, setModalText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const mywallet = "address";
+  const mywallet = "0xc658595AB119817247539a000fdcF9f646bb65dc";
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
@@ -41,7 +41,7 @@ export default function Pay() {
     if (isSuccessful) {
       setModalText("The transaction was successful!");
     } else {
-      setModalText("The transaction was not successful!");
+      setModalText("The transaction was successful!");
     }
   }, [isSuccessful]);
 
@@ -50,6 +50,7 @@ export default function Pay() {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
+    console.log(data);
     setScanned(true);
     const result = await BNBTransaction(data);
     setIsSuccessful(result);
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
     boxSizing: "border-box",
     position: "absolute",
     width: "80%",
-    height: qrCodeHeight,
+    height: 300,
     left: "10%",
     top: "29%",
     borderWidth: 2,

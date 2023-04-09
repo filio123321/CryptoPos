@@ -309,6 +309,7 @@ export default function WalletScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Private Key"
+                secureTextEntry={true}
                 onChangeText={(value) => {
                   setPrivateKey(value);
                 }}
