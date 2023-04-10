@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import "./global";
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';

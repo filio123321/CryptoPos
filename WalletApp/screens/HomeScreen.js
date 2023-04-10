@@ -3,18 +3,30 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import Coin from '../components/Coin';
 import { useEffect, useState } from 'react';
-import { getAddressBalance, bnbTousd } from '.././api/bsc_api';
+import { getAddressBalanceBNB, bnbTousd } from '.././api/bsc_api';
 
 import { VictoryLine } from "victory-native";
 
 
+// addresite sa tuk za testvane, v budeshte shte izpolzvame expo-secure-store za store-vane na priv i pub key-ovete
+const bnbPublicAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+const btcPublicAddress = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
+const ethPublicAddress = "0x6326cAEB1BE2C7cDb8c31e46662368C31ebaECf4";
   
 
 
 export default function HomeScreen() {
     const navigation = useNavigation();
+    // const [balanceBNB, setBalanceBNB] = useState(0);
     const [balanceBNB, setBalanceBNB] = useState(0);
-    const [balanceUSD, setBalanceUSD] = useState(0);
+    const [balanceUSD, setBalanceUSD] = useState({bnb: 0, btc: 0, eth: 0});
+    const [finalBalance, setFinalBalance] = useState(0);
+
+    useEffect(() => {
+        setInterval(() => {
+            setFinalBalance((balanceUSD['bnb'] + balanceUSD['btc'] + balanceUSD['eth']).toFixed(2));
+        }, 1000);
+    }, []);
         // 0xc658595AB119817247539a000fdcF9f646bb65dc
 
         const convertBnbToUsd = async () => {
@@ -31,8 +43,17 @@ export default function HomeScreen() {
     //       });
     // }, []);
 
+
     useEffect(() => {
-        setBalanceBNB(0.00000000);
+        const getBalance = async () => {
+            const balance = await getAddressBalanceBNB(bnbPublicAddress); // pass in your BNB balance here
+            setBalanceBNB((balance / 1000000000000000000).toFixed(8));
+            console.log("balance", balance);
+        }
+
+        getBalance();
+        // setBalanceBNB(0.00000000);
+        // console.log("SPLIT", balanceBNB);
     }, []);
 
     // useEffect(() => {
@@ -46,6 +67,8 @@ export default function HomeScreen() {
     //     // console.log("SPLIT", balanceUSD);
     // }, [balanceBNB]);
 
+    
+
 
     return (
         // <View style={styles.container}>
@@ -54,8 +77,8 @@ export default function HomeScreen() {
                 
                 <View style={styles.BalanceWrapper}>
                     <Text style={styles.BalanceText}>
-                        $ {balanceUSD.toFixed(0)}
-
+                        {/* $ {balanceUSD.toFixed(0)} */}
+                        $ {finalBalance}
                         {/* {(balanceUSD == 0 ? null : < ><Text>.</Text><Text style={styles.BalanceTextCents}>{balanceUSD.toString().split('.')[1].slice(0, 2)}</Text></>)} */}
 
                     </Text>
@@ -128,10 +151,10 @@ export default function HomeScreen() {
                     </View>
 
                     <View style={styles.OwnedCoinsWrapper}>
-                        <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
-                        <Coin symbol='ETH' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        <Coin symbol='BNB' balance={balanceBNB} walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        {/* <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
+                        <Coin symbol='ETH' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
                         {/* <Coin symbol='XRP' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
-                        <Coin symbol='BNB' balance='0.8049473' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
                     </View>
 
                 

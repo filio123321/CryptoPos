@@ -42,56 +42,34 @@ const Coin = (props) => {
     }
   }, [props.symbol]);
   
+  useEffect(() => {
+    // use bnbTousd to convert bnb to usd
+    if (props.symbol.toUpperCase() === "BNB") {
+      bnbTousd(props.balance).then((data) => {
+        setBalance(data);
+      }
+      )
+    } else {
+      setBalance(props.balance);
+    }
+
+
+  }, [props.balance])
+
+  useEffect(() => {
+    let old = walletBalance;
+    old['bnb'] = balance; 
+    const newBalance = old;
+
+    setWalletBalance(newBalance);
+
+    console.log(walletBalance);
+  }, [balance])
 
 
   const widthWithoutImage = '100% - 60'
 
-  const getCoinPrice = () => {
-    // const url = "https://api.coinconvert.net/convert/btc/usd?amount=1"
-    const url = "https://api.coinconvert.net/convert/" + props.symbol + "/usd?amount=" + props.balance
-    fetch(url)
-      .then((response) => response.json())
-      .then((json) => {
-        // console.log(json.USD)
-        setCoinPrice(json.USD)
-        return json
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
 
-  const getCoinBalance = () => {
-    // get address from SecureStore BNB_pub
-    // address = SecureStore.getItemAsync('BNB_pub');
-    if (props.symbol.toUpperCase() == "BNB"){
-      address = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
-
-      console.log(address);
-
-      getAddressBalance(address).then((balance) => {
-        console.log(balance);
-        setBalance(balance / 1000000000000000000);
-
-        
-
-        setWalletBalance(walletBalance + bnbTousd(balance / 1000000000000000000));
-
-        console.log(walletBalance);
-      }).catch((error) => {
-        console.error(error);
-      });
-    }else{
-      setBalance(props.balance);
-    }
-    
-  }
-
-  useEffect(() => {
-    getCoinPrice()
-    // getCoinBalance();
-    setWalletBalance(walletBalance + coinPrice * props.balance);
-  }, [props.balance])
   // do that but set interval to 5 seconds
 
   // useEffect(() => {
@@ -203,7 +181,7 @@ const Coin = (props) => {
           {/* <Text style={styles.BalanceTextUsd}>{coinPrice ? coinPrice.toFixed(2) : "0"}</Text>
           <Text style={styles.BalanceText}>{typeof props.balance === "number" && !isNaN(props.balance) ? props.balance.toFixed(5) : "0"}</Text> */}
 
-          <Text style={styles.BalanceTextUsd}>{coinPrice ? (coinPrice * props.balance).toFixed(2) : "0"}</Text>
+          <Text style={styles.BalanceTextUsd}>{balance.toFixed(2)}</Text>
           {/* <Text style={styles.BalanceTextUsd}>{coinPrice ? (balance).toFixed(2) : "0"}</Text> */}
 
           <Text style={styles.BalanceText}>{props.balance}</Text>
