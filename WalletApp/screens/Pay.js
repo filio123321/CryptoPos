@@ -24,6 +24,8 @@ export default function Pay() {
   const [modalText, setModalText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const mywallet = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+  const myprivatekey =
+    "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
@@ -41,7 +43,7 @@ export default function Pay() {
     if (isSuccessful) {
       setModalText("The transaction was successful!");
     } else {
-      setModalText("The transaction was successful!");
+      setModalText("The transaction was not successful!");
     }
   }, [isSuccessful]);
 
@@ -50,7 +52,12 @@ export default function Pay() {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
+    data = JSON.parse(data);
+    console.log(typeof data);
+    data["senderAddress"] = mywallet;
+    data["privateKey"] = myprivatekey;
     console.log(data);
+    data = JSON.stringify(data);
     setScanned(true);
     const result = await BNBTransaction(data);
     setIsSuccessful(result);
