@@ -26,12 +26,10 @@ export default function BusinessExchange(props) {
   const navigation = useNavigation();
   const [balanceCurrency, setBalanceCurrency] = useState(0);
   const [TextusdToBnb, setUsdBNB] = useState(0);
-  const walletBNB = props.route.params.wallet;
-  console.log(walletBNB);
+  const wallet = props.route.params.wallet;
+  const currency = props.route.params.currency;
+  console.log(wallet);
   const BNBprivateKey = props.route.params.privateKey;
-  const walletBTC = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2";
-  const walletETH = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
-  const [currency, setCurrency] = useState("BNB");
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState(10);
   const [fontsLoaded, error] = Font.useFonts({
@@ -53,13 +51,13 @@ export default function BusinessExchange(props) {
 
   async function loadAddressBalance() {
     if (currency == "BNB") {
-      const bnbAmount = await getAddressBalanceBNB(walletBNB);
+      const bnbAmount = await getAddressBalanceBNB(wallet);
       setBalanceCurrency(bnbAmount / 1000000000000000000);
     } else if (currency == "BTC") {
-      const btcAmount = await getAddressBalanceBTC(walletBTC);
+      const btcAmount = await getAddressBalanceBTC(wallet);
       setBalanceCurrency(btcAmount / 100000000);
     } else if (currency == "ETH") {
-      const ethAmount = await getAddressBalanceETH(walletETH);
+      const ethAmount = await getAddressBalanceETH(wallet);
       setBalanceCurrency(ethAmount / 1000000000000000000);
     }
   }
@@ -86,7 +84,7 @@ export default function BusinessExchange(props) {
       style={styles.container}
       keyboardVerticalOffset={30}
     >
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -124,11 +122,11 @@ export default function BusinessExchange(props) {
             <Text style={styles.buttonText}>ETH</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Modal> */}
       <View style={styles.viewContainer}>
         <TouchableOpacity
           style={styles.coinContainer}
-          onPress={() => setModalVisible(true)}
+          // onPress={() => setModalVisible(true)}
         >
           <Text style={styles.coinText}>{currency}</Text>
         </TouchableOpacity>
@@ -245,13 +243,6 @@ export default function BusinessExchange(props) {
       <TouchableOpacity
         style={styles.buttonNext}
         onPress={() => {
-          if (currency == "BNB") {
-            var wallet = walletBNB;
-          } else if (currency == "BTC") {
-            var wallet = walletBTC;
-          } else if (currency == "ETH") {
-            var wallet = walletETH;
-          }
           navigation.replace("Payment", {
             wallet: wallet,
             amount: TextusdToBnb,

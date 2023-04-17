@@ -4,19 +4,17 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Button,
   Modal,
 } from "react-native";
 import * as Font from "expo-font";
 import React, { useState, useEffect } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { BNBTransaction } from "../api/bsc_api";
+import { BNBTransaction, ETHTransaction } from "../api/bsc_api";
 import { useNavigation } from "@react-navigation/native";
-
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
-export default function Pay() {
+export default function Pay(props) {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -59,9 +57,20 @@ export default function Pay() {
     console.log(data);
     data = JSON.stringify(data);
     setScanned(true);
-    const result = await BNBTransaction(data);
-    setIsSuccessful(result);
-    setModalVisible(true);
+    if (data["currency"] == "BNB") {
+      const result = await BNBTransaction(data);
+      setIsSuccessful(result);
+      setModalVisible(true);
+    } else if (data["currency"] == "ETH") {
+      const result = await ETHTransaction(
+        mywallet,
+        myprivatekey,
+        data["wallet"],
+        data["amount"]
+      );
+      setIsSuccessful(result);
+      setModalVisible(true);
+    }
   };
 
   if (hasPermission === null) {
@@ -140,9 +149,9 @@ export default function Pay() {
           </TouchableOpacity>
         )}
       </View>
-      <TouchableOpacity style={styles.nfcButton}>
+      {/* <TouchableOpacity style={styles.nfcButton}>
         <Text style={styles.buttonText}>Use NFC</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

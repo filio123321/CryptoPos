@@ -10,12 +10,11 @@ import {
 import * as Crypto from "expo-crypto";
 import elliptic from "elliptic";
 import { keccak256 } from "js-sha3";
-// import bitcoin from "react-native-bitcoinjs-lib";
 import * as Clipboard from "expo-clipboard";
 import { Zocial, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
-import { ChekcValid } from "../api/bsc_api";
+import { ChekcValid, generateEthAddress } from "../api/bsc_api";
 export default function WalletScreen() {
   const [modalGenerate, setModalGenerate] = useState(false);
   const [modalCred, setModalCred] = useState(false);
@@ -24,12 +23,10 @@ export default function WalletScreen() {
   const [currency, setCurrency] = useState("");
   const [walletBNB, setWalletBNB] = useState("");
   const [BNBprivateKey, setBNBprivateKey] = useState("");
-  const [walletBTC, setWalletBTC] = useState("");
-  const [BTCprivateKey, setBTCprivateKey] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
-  const [walletAddress, setWalletAddress] = useState("");
-
   const [walletETH, setWalletETH] = useState("");
+  const [privateKeyETH, setPrivateKeyETH] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [privateKey, setPrivateKey] = useState("");
 
   async function generateBscAddress() {
     const privateKeyBytes = await Crypto.digestStringAsync(
@@ -49,28 +46,9 @@ export default function WalletScreen() {
     const address = "0x" + Buffer.from(hash.slice(-20)).toString("hex");
 
     setWalletBNB(address);
-    console.log(address, privateKey);
     setBNBprivateKey(privateKeyHex);
   }
 
-  //   async function generateBtcAddress() {
-  //     const privateKeyBytes = await Crypto.digestStringAsync(
-  //       Crypto.CryptoDigestAlgorithm.SHA256,
-  //       Math.random().toString()
-  //     );
-  //     const privateKeyHex = Buffer.from(privateKeyBytes, "base64").toString(
-  //       "hex"
-  //     );
-
-  //     const keyPair = bitcoin.ECPair.fromPrivateKey(
-  //       Buffer.from(privateKeyHex, "hex")
-  //     );
-  //     const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-  //     console.log(address);
-  //     console.log(privateKeyHex);
-  //     setWalletBTC(address);
-  //     setBTCprivateKey(privateKeyHex);
-  //   }
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -101,15 +79,26 @@ export default function WalletScreen() {
               <TouchableOpacity
                 style={{ position: "absolute", left: "90%" }}
                 onPress={async () => {
-                  await Clipboard.setStringAsync(walletBNB);
+                  await Clipboard.setStringAsync(
+                    currency == "BNB"
+                      ? walletBNB
+                      : currency == "ETH"
+                      ? walletETH
+                      : ""
+                  );
                 }}
               >
                 <FontAwesome5 name="copy" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
             <Text style={[styles.buttonText, { fontSize: 18 }]}>
-              {walletBNB}
+              {currency == "BNB"
+                ? walletBNB
+                : currency == "ETH"
+                ? walletETH
+                : ""}
             </Text>
+
             <View
               style={{
                 flexDirection: "row",
@@ -123,14 +112,24 @@ export default function WalletScreen() {
               <TouchableOpacity
                 style={{ position: "absolute", left: "90%" }}
                 onPress={async () => {
-                  await Clipboard.setStringAsync(BNBprivateKey);
+                  await Clipboard.setStringAsync(
+                    currency == "BNB"
+                      ? BNBprivateKey
+                      : currency == "ETH"
+                      ? privateKeyETH
+                      : ""
+                  );
                 }}
               >
                 <FontAwesome5 name="copy" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
             <Text style={[styles.buttonText, { fontSize: 18 }]}>
-              {BNBprivateKey}
+              {currency == "BNB"
+                ? BNBprivateKey
+                : currency == "ETH"
+                ? privateKeyETH
+                : ""}
             </Text>
             <TouchableOpacity
               style={{
@@ -148,10 +147,20 @@ export default function WalletScreen() {
               }}
               onPress={() => {
                 setModalCred(false);
-                console.log("BUS");
                 navigation.replace("Home", {
-                  wallet: walletBNB,
-                  privateKey: BNBprivateKey,
+                  wallet:
+                    currency == "BNB"
+                      ? walletBNB
+                      : currency == "ETH"
+                      ? walletETH
+                      : "",
+                  privateKey:
+                    currency == "BNB"
+                      ? BNBprivateKey
+                      : currency == "ETH"
+                      ? privateKeyETH
+                      : "",
+                  currency: currency,
                 });
               }}
             >
@@ -190,24 +199,30 @@ export default function WalletScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ padding: 10 }}
-              onPress={() => {
-                setCurrency("BTC");
-                setModalGenerate(false);
-                setModalCred(true);
-                generateBtcAddress();
-              }}
-            >
-              <Zocial name="bitcoin" size={30} color="orange" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ padding: 10 }}
-              onPress={() => {
+              onPress={async () => {
                 setCurrency("ETH");
+                const data = await generateEthAddress();
+                setWalletETH(data.address);
+                setPrivateKeyETH(data.privateKey);
                 setModalGenerate(false);
                 setModalCred(true);
               }}
             >
               <FontAwesome5 name="ethereum" size={30} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  alignSelf: "center",
+                  position: "absolute",
+                  left: "30%",
+                  bottom: "10%",
+                },
+              ]}
+              onPress={() => setModalGenerate(false)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -242,22 +257,26 @@ export default function WalletScreen() {
             <TouchableOpacity
               style={{ padding: 10 }}
               onPress={() => {
-                setCurrency("BTC");
-                setModalImport(false);
-                setModalInput(true);
-              }}
-            >
-              <Zocial name="bitcoin" size={30} color="orange" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ padding: 10 }}
-              onPress={() => {
                 setCurrency("ETH");
                 setModalImport(false);
                 setModalInput(true);
               }}
             >
               <FontAwesome5 name="ethereum" size={30} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  alignSelf: "center",
+                  position: "absolute",
+                  left: "30%",
+                  bottom: "10%",
+                },
+              ]}
+              onPress={() => setModalImport(false)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -326,6 +345,7 @@ export default function WalletScreen() {
                   navigation.replace("Home", {
                     wallet: walletAddress,
                     privateKey: privateKey,
+                    currency: currency,
                   });
                 } else {
                   console.log("oops");

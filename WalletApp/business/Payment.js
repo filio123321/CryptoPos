@@ -50,6 +50,8 @@ export default function Payment(props) {
             navigation.replace("BusinessExchange", {
               wallet: wallet,
               BNBprivateKey: privateKey,
+              amount: amount,
+              currency: currency,
             })
           }
           style={{ marginLeft: 10 }}
@@ -85,7 +87,7 @@ export default function Payment(props) {
             style={styles.walletButtonShare}
             onPress={() => {
               Share.share({
-                message: json,
+                message: message,
               });
             }}
           >

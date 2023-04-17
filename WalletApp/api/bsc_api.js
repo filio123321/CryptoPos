@@ -194,3 +194,60 @@ export const ChekcValid = (address, privateKey) => {
     return false;
   }
 };
+
+export const ETHTransaction = async (
+  senderAddress,
+  privateKey,
+  recipientAddress,
+  amount
+) => {
+  try {
+    const Web3 = require("web3");
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider(
+        "https://mainnet.infura.io/v3/85776a4fb53a4145936b4847edcf5d51"
+      )
+    );
+
+    const senderNonce = await web3.eth.getTransactionCount(senderAddress);
+
+    const amountToSend = web3.utils.toWei(amount.toString(), "ether");
+
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasLimit = 21000;
+
+    const txObject = {
+      nonce: web3.utils.toHex(senderNonce),
+      gasPrice: web3.utils.toHex(gasPrice),
+      gasLimit: web3.utils.toHex(gasLimit),
+      to: recipientAddress,
+      value: web3.utils.toHex(amountToSend),
+      data: "",
+    };
+
+    const signedTx = await web3.eth.accounts.signTransaction(
+      txObject,
+      privateKey
+    );
+
+    const txReceipt = await web3.eth.sendSignedTransaction(
+      signedTx.rawTransaction
+    );
+    console.log(`Transaction hash: ${txReceipt.transactionHash}`);
+    return true;
+  } catch (e) {
+    console.log(`Error ${e}`);
+    return false;
+  }
+};
+
+export const generateEthAddress = () => {
+  const url = "http://192.168.0.105:3000/getEth";
+  return fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      return data;
+    })
+    .catch((error) => console.error(error));
+};
