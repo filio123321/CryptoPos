@@ -9,6 +9,7 @@ import * as SecureStore from 'expo-secure-store';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import Recieve from './screens/Recieve';
+import SwapScreen from './screens/SwapScreen';
 
 
 const Stack = createStackNavigator();
@@ -48,6 +49,20 @@ export default function App() {
             component={Recieve}
             options={{
               title: 'Recieve',
+              headerStyle: { backgroundColor: '#161616' },
+              headerTintColor: '#fff',
+              headerTitleStyle: { fontWeight: 'bold' },
+              headerShadowVisible: false, 
+              // headerTransparent: true,
+              // headerLeft: null,
+            }}
+          />
+
+          <Stack.Screen
+            name="Swap"
+            component={SwapScreen}
+            options={{
+              title: 'Swap',
               headerStyle: { backgroundColor: '#161616' },
               headerTintColor: '#fff',
               headerTitleStyle: { fontWeight: 'bold' },

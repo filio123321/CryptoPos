@@ -16,6 +16,10 @@ import QRCode from 'react-native-qrcode-svg';
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
+const bnbPublicAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+const btcPublicAddress = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
+const ethPublicAddress = "0x6326cAEB1BE2C7cDb8c31e46662368C31ebaECf4";
+
 
 
 const getBNBPublicAddress = async () => {
@@ -50,6 +54,13 @@ const Recieve = (props) => {
         };
     
         fetchData();
+    }, []);
+
+    useEffect(() => {
+        // if address
+        if (!address){
+            setAddress(bnbPublicAddress);
+        }
     }, []);
 
 

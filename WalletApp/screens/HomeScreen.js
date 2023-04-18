@@ -111,7 +111,7 @@ export default function HomeScreen() {
                         </View>
 
                         <View style={{flexDirection: 'column', alignItems: 'center', margin: 10,}}>
-                            <TouchableOpacity style={styles.FuncButton}>
+                            <TouchableOpacity onPress={() => {navigation.navigate("Swap", {crypto: null})}} style={styles.FuncButton}>
                                 <AntDesign name="swap" size={45} color="white" />
                             </TouchableOpacity>
                             <Text style={{color: 'white',  fontSize: 15, marginTop: 5}}>Swap</Text>
@@ -299,26 +299,3 @@ const styles = StyleSheet.create({
 
 // 28282B
 
-
-/*
-
-import * as SecureStore from 'expo-secure-store';
-import { generateMnemonic, EthHdWallet } from 'eth-hd-wallet';
-
-// Generate a 12-word mnemonic seed phrase
-const mnemonic = generateMnemonic();
-
-// Use the seed phrase to create a new Ethereum HD wallet
-const wallet = EthHdWallet.fromMnemonic(mnemonic);
-
-// Get the first account from the wallet
-const account = wallet.generateAddresses(1)[0];
-
-// Get the private key from the account
-const privateKey = wallet.getPrivateKey(account);
-
-// Store the private key securely using Expo SecureStore
-await SecureStore.setItemAsync('privateKey', privateKey);
-
-
-*/
