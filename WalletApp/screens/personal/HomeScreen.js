@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
-import Coin from '../components/Coin';
+import Coin from '../../components/Coin';
 import { useEffect, useState } from 'react';
-import { getAddressBalanceBNB, bnbTousd } from '.././api/bsc_api';
+import { getAddressBalanceBNB, bnbTousd } from '../../api/bsc_api';
 
 import { VictoryLine } from "victory-native";
 
 
 // addresite sa tuk za testvane, v budeshte shte izpolzvame expo-secure-store za store-vane na priv i pub key-ovete
-const bnbPublicAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+const bnbPublicAddress = "0xF63a42dF440F47caDEad7cafbd96F6CfD6e62b87";
 const btcPublicAddress = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
 const ethPublicAddress = "0x6326cAEB1BE2C7cDb8c31e46662368C31ebaECf4";
   

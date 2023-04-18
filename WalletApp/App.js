@@ -6,10 +6,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as SecureStore from 'expo-secure-store';
 
 
-import HomeScreen from './screens/HomeScreen';
-import LoginScreen from './screens/LoginScreen';
-import Recieve from './screens/Recieve';
-import SwapScreen from './screens/SwapScreen';
+import HomeScreen from './screens/personal/HomeScreen';
+import LoginScreen from './screens/personal/LoginScreen';
+import Recieve from './screens/personal/Recieve';
+import SwapScreen from './screens/personal/SwapScreen';
 
 
 const Stack = createStackNavigator();
@@ -51,10 +51,9 @@ export default function App() {
               title: 'Recieve',
               headerStyle: { backgroundColor: '#161616' },
               headerTintColor: '#fff',
-              headerTitleStyle: { fontWeight: 'bold' },
               headerShadowVisible: false, 
-              // headerTransparent: true,
-              // headerLeft: null,
+              headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: "#CA34FF" },
+              headerBackTitleVisible: false,
             }}
           />
 
@@ -65,8 +64,9 @@ export default function App() {
               title: 'Swap',
               headerStyle: { backgroundColor: '#161616' },
               headerTintColor: '#fff',
-              headerTitleStyle: { fontWeight: 'bold' },
+              headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: "#CA34FF" },
               headerShadowVisible: false, 
+              headerBackTitleVisible: false,
               // headerTransparent: true,
               // headerLeft: null,
             }}

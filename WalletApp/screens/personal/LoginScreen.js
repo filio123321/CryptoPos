@@ -16,8 +16,8 @@ export default function LoginScreen() {
     const ref = useRef(PagerView);
 
     const [fontsLoaded, error] = useFonts({
-        'font3': require('../assets/fonts/font3.otf'),
-        'manjari': require('../assets/fonts/Manjari-Regular.ttf'),
+        'font3': require('../../assets/fonts/font3.otf'),
+        'manjari': require('../../assets/fonts/Manjari-Regular.ttf'),
       });
 
       
@@ -58,16 +58,16 @@ export default function LoginScreen() {
             end={{ x: 0, y: 1 }}
         >
             <Image
-                source={require('../assets/ethereum.png')}
+                source={require('../../assets/ethereum.png')}
                 style={{ position: 'absolute', top: "-3%", left: "-10%", right: 0, bottom: 0, opacity: 0.1, width: 200, height: 200 }}
             />
             <Image
-            source={require('../assets/bitcoin.png')}
+            source={require('../../assets/bitcoin.png')}
             style={{ position: 'absolute', right: "-20%", top: "+27%", opacity: 0.15, transform: [{ rotate: '10deg' }], tintColor: 'gray', width: 350, height: 350}}
             />
 
             <Image
-            source={require('../assets/bnb.png')}
+            source={require('../../assets/bnb.png')}
             style={{ position: 'absolute', top: "+58%", left: "-15%", right: 0, bottom: 0, opacity: 0.1, width: 200, height: 200, tintColor: 'gray' }}
             />
             

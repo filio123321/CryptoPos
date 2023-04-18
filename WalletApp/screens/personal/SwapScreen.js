@@ -23,7 +23,7 @@ import {
   getAddressBalanceETH,
   getAddressBalanceBNB,
   BNBTransaction,
-} from "../api/bsc_api";
+} from "../../api/bsc_api";
 const height = Dimensions.get("window").height * 0.475;
 
 export default function SwapScreen() {
@@ -73,7 +73,7 @@ export default function SwapScreen() {
     } else if (passedCurrency == "BNB") {
         return (
             <Image
-            source={require("../assets/bnb.png")}
+            source={require("../../assets/bnb.png")}
             style={{ width: 24, height: 24 }}
             />
         );
@@ -87,7 +87,7 @@ export default function SwapScreen() {
     } else if (currency == "BNB") {
       return (
         <Image
-          source={require("../assets/bnb.png")}
+          source={require("../../assets/bnb.png")}
           style={{ width: 24, height: 24 }}
         />
       );

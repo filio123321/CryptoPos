@@ -75,7 +75,7 @@ const Recieve = (props) => {
 
 
     const [fontsLoaded, error] = useFonts({
-        'manjari': require('../assets/fonts/Manjari-Regular.ttf'),
+        'manjari': require('../../assets/fonts/Manjari-Regular.ttf'),
     });
 
     if (!fontsLoaded) {
