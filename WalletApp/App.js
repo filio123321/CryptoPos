@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as Font from "expo-font";
 import "./ global";
+
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BusinessExchangeScreen from "./business/BusinessExchangeScreen";
@@ -11,6 +12,9 @@ import WalletScreenBusiness from "./business/WalletScreenBusiness";
 import WalletScreen from "./screens/WalletScreen";
 import SendCrypto from "./screens/SendCrypto";
 import Pay from "./screens/Pay";
+import Receive from "./screens/Receive";
+import SwapScreen from "./screens/SwapScreen";
+
 import { LogBox } from "react-native";
 const Stack = createStackNavigator();
 
@@ -118,6 +122,22 @@ export default function App() {
         />
 
         <Stack.Screen
+          name="Receive"
+          component={Receive}
+          options={{
+            title: "Receive",
+            headerStyle: { backgroundColor: "#161616" },
+            headerTintColor: "#fff",
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 30,
+              color: "#CA34FF",
+            },
+            headerBackTitleVisible: false,
+          }}
+        />
+        <Stack.Screen
           name="BusinessExchange"
           component={BusinessExchangeScreen}
           options={({ navigation }) => ({
@@ -156,14 +176,34 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{
-            title: "Home Screen",
-            headerStyle: { backgroundColor: "#28282B" },
+            title: "Wallet balance",
+            headerStyle: { backgroundColor: "#161616" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold" },
+            headerShadowVisible: false,
+            headerLeft: null,
+          }}
+        />
+
+        <Stack.Screen
+          name="Swap"
+          component={SwapScreen}
+          options={{
+            title: "Swap",
+            headerStyle: { backgroundColor: "#161616" },
             headerTintColor: "#fff",
             headerTitleStyle: {
               fontWeight: "bold",
+              fontSize: 30,
+              color: "#CA34FF",
             },
+            headerShadowVisible: false,
+            headerBackTitleVisible: false,
+            // headerTransparent: true,
+            // headerLeft: null,
           }}
         />
+
         <Stack.Screen
           name="Pay"
           component={Pay}

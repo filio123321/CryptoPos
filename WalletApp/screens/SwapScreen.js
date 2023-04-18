@@ -16,6 +16,7 @@ import {
   Zocial,
   FontAwesome,
   FontAwesome5,
+  Ionicons,
 } from "@expo/vector-icons";
 import {
   getAddressBalanceBTC,
@@ -23,37 +24,60 @@ import {
   getAddressBalanceBNB,
   BNBTransaction,
 } from "../api/bsc_api";
-import { BarCodeScanner } from "expo-barcode-scanner";
-const height = Dimensions.get("window").height * 0.4;
+const height = Dimensions.get("window").height * 0.475;
 
-export default function SendCrypto(props) {
-  const wallet = props.route.params.wallet;
-  const privateKey = props.route.params.privateKey;
-  const PervCurrency = props.route.params.currency;
-  const [currency, setCurrency] = useState(PervCurrency);
+export default function SwapScreen() {
+  const walletBNB = "0xc658595AB119817247539a000fdcF9f646bb65dc";
+  const privateKey =
+    "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
+  const walletBTC = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2";
+  const walletETH = "0x260e69ab6665B9ef67b60674E265b5D21c88CB45";
+  const [currency, setCurrency] = useState("BNB");
   const [balance, setBalanceCurrency] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalQRVisible, setModalQRVisible] = useState(false);
-  const [amount, setAmount] = useState(0);
+  const [amountFrom, setAmountFrom] = useState(0);
+  const [amountTo, setAmountTo] = useState(0);
   const [sendto, setSendTo] = useState("");
   const [isSuccessful, setIsSuccessful] = useState(null);
   const [modalText, setModalText] = useState("");
   const [modalSuccessVisible, setModalSuccessVisible] = useState(false);
 
+  const ChangeValuesOnInputFields = () => {
+    const tempAmountFrom = parseFloat(amountFrom);
+    const tempAmountTo = parseFloat(amountTo);
+
+    setAmountFrom(tempAmountTo);
+    setAmountTo(tempAmountFrom);
+  };
+
   async function loadAddressBalance() {
     if (currency == "BNB") {
-      const bnbAmount = await getAddressBalanceBNB(wallet);
+      const bnbAmount = await getAddressBalanceBNB(walletBNB);
       setBalanceCurrency(bnbAmount / 1000000000000000000);
     } else if (currency == "BTC") {
-      const btcAmount = await getAddressBalanceBTC(wallet);
+      const btcAmount = await getAddressBalanceBTC(walletBTC);
       setBalanceCurrency(btcAmount / 100000000);
     } else if (currency == "ETH") {
-      const ethAmount = await getAddressBalanceETH(wallet);
+      const ethAmount = await getAddressBalanceETH(walletETH);
       setBalanceCurrency(ethAmount / 1000000000000000000);
     }
   }
 
-  function loadImageButton() {
+  function loadImageButton(passedCurrency) {
+    if (passedCurrency == "BTC") {
+      return <Zocial name="bitcoin" size={24} color="orange" />;
+    } else if (passedCurrency == "ETH") {
+      return <FontAwesome5 name="ethereum" size={24} color="#fff" />;
+    } else if (passedCurrency == "BNB") {
+      return (
+        <Image
+          source={require("../assets/bnb.png")}
+          style={{ width: 24, height: 24 }}
+        />
+      );
+    }
+
     if (currency == "BTC") {
       return <Zocial name="bitcoin" size={24} color="orange" />;
     } else if (currency == "ETH") {
@@ -69,14 +93,6 @@ export default function SendCrypto(props) {
   }
 
   useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-    };
-
-    getBarCodeScannerPermissions();
-  }, []);
-
-  useEffect(() => {
     loadAddressBalance();
   }, []);
 
@@ -87,9 +103,9 @@ export default function SendCrypto(props) {
 
   useEffect(() => {
     if (isSuccessful) {
-      setModalText("The transaction was successful!");
+      setModalText("The swap was successful!");
     } else {
-      setModalText("The transaction was not successful!");
+      setModalText("The swap was not successful!");
     }
   }, [isSuccessful]);
 
@@ -105,85 +121,6 @@ export default function SendCrypto(props) {
       behavior={Platform.OS === "ios" ? "height" : "padding"}
       keyboardVerticalOffset={0}
     >
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.modalBackground}>
-          <View style={[styles.modalView, { height: "24%" }]}>
-            <TouchableOpacity
-              style={{ padding: 5 }}
-              onPress={() => {
-                setModalVisible(false);
-                setCurrency("BNB");
-              }}
-            >
-              <Image
-                source={require("../assets/bnb.png")}
-                style={{ width: 30, height: 30 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ padding: 5 }}
-              onPress={() => {
-                setModalVisible(false);
-                setCurrency("BTC");
-              }}
-            >
-              <Zocial name="bitcoin" size={30} color="orange" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ padding: 5 }}
-              onPress={() => {
-                setModalVisible(false);
-                setCurrency("ETH");
-              }}
-            >
-              <FontAwesome5 name="ethereum" size={30} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalQRVisible}
-        onRequestClose={() => {
-          setModalQRVisible(false);
-        }}
-      >
-        <View style={styles.modalBackground}>
-          <View style={[styles.modalView, { borderRadius: 0, height: "50%" }]}>
-            <BarCodeScanner
-              onBarCodeScanned={handleBarCodeScanned}
-              style={StyleSheet.absoluteFillObject}
-            />
-          </View>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                flexDirection: "row",
-                top: "70%",
-                left: "10%",
-                backgroundColor: "#1E1E1E",
-              },
-            ]}
-            onPress={() => {
-              setModalQRVisible(false);
-            }}
-          >
-            <Text style={styles.buttonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -211,6 +148,7 @@ export default function SendCrypto(props) {
           </View>
         </View>
       </Modal>
+
       <View style={styles.wallet}>
         <Text
           style={[
@@ -223,20 +161,34 @@ export default function SendCrypto(props) {
             },
           ]}
         >
-          Recipient
+          From:
         </Text>
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Wallet Address"
+            placeholder="0"
             placeholderTextColor="#CA34FF"
-            value={sendto}
-            onChangeText={(value) => setSendTo(value)}
+            keyboardType="numeric"
+            value={amountFrom.toString()}
+            onChangeText={(value) => setAmountFrom(value)}
           />
-          <TouchableOpacity onPress={() => setModalQRVisible(true)}>
-            <MaterialCommunityIcons name="qrcode-scan" size={24} color="grey" />
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            {loadImageButton("BNB")}
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          onPress={ChangeValuesOnInputFields}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingVertical: 10,
+          }}
+        >
+          <Ionicons name="ios-swap-vertical-sharp" size={40} color="#8a8a8a" />
+        </TouchableOpacity>
+
         <Text
           style={[
             styles.buttonText,
@@ -249,21 +201,24 @@ export default function SendCrypto(props) {
             },
           ]}
         >
-          Amount
+          To (Estimated)
         </Text>
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
             placeholder="0"
             placeholderTextColor="#CA34FF"
             keyboardType="numeric"
-            onChangeText={(value) => setAmount(value)}
+            value={amountTo.toString()}
+            onChangeText={(value) => setAmountTo(value)}
           />
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            {loadImageButton()}
+            {loadImageButton("ETH")}
           </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: "row", width: "100%", marginTop: "5%" }}>
+
+        <View style={{ flexDirection: "row", width: "100%", marginTop: "4%" }}>
           <Text
             style={[
               styles.buttonText,
@@ -387,12 +342,12 @@ export default function SendCrypto(props) {
       <TouchableOpacity
         style={[styles.button, { flexDirection: "row" }]}
         onPress={async () => {
-          if (balance - amount >= 0) {
-            const json = `{"wallet": "${sendto}", "amount": ${amount}, "senderAddress": "${wallet}", "privateKey": "${privateKey}"}`;
+          if (balance - amountFrom >= 0) {
+            const json = `{"wallet": "${sendto}", "amount": ${amountFrom}, "senderAddress": "${walletBNB}", "privateKey": "${privateKey}"}`;
             const result = await BNBTransaction(json);
             setIsSuccessful(result);
             setModalSuccessVisible(true);
-          } else if (balance - amount < 0) {
+          } else if (balance - amountFrom < 0) {
             setModalText("Insufficient balance.");
             setModalSuccessVisible(true);
             console.log(modalText);
@@ -417,7 +372,7 @@ styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
   },
   inputContainer: {
     margin: "6%",
@@ -442,7 +397,7 @@ styles = StyleSheet.create({
     marginTop: "50%",
     width: "80%",
     height: "40%",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
     borderColor: "#CA34FF",
     borderRadius: 20,
     borderWidth: 3,

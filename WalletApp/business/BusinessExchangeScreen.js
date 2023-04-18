@@ -28,8 +28,9 @@ export default function BusinessExchange(props) {
   const [TextusdToBnb, setUsdBNB] = useState(0);
   const wallet = props.route.params.wallet;
   const currency = props.route.params.currency;
-  console.log(wallet);
   const BNBprivateKey = props.route.params.privateKey;
+  console.log(wallet, currency, BNBprivateKey);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState(10);
   const [fontsLoaded, error] = Font.useFonts({

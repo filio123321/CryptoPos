@@ -9,23 +9,21 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import Coin from "../components/Coin";
 import { useEffect, useState } from "react";
-import { getAddressBalanceBNB, bnbTousd } from ".././api/bsc_api";
+import { getAddressBalanceBNB, bnbTousd } from "../api/bsc_api";
 
 import { VictoryLine } from "victory-native";
 
 // addresite sa tuk za testvane, v budeshte shte izpolzvame expo-secure-store za store-vane na priv i pub key-ovete
 
-const btcPublicAddress = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
-const ethPublicAddress = "0x6326cAEB1BE2C7cDb8c31e46662368C31ebaECf4";
-
 export default function HomeScreen(props) {
   const navigation = useNavigation();
   // const [balanceBNB, setBalanceBNB] = useState(0);
-  const BNBprivateKey = props.route.params.privateKey;
-  const bnbPublicAddress = props.route.params.wallet;
-  const [balanceBNB, setBalanceBNB] = useState(0);
+  const [balance, setBalance] = useState(0);
   const [balanceUSD, setBalanceUSD] = useState({ bnb: 0, btc: 0, eth: 0 });
   const [finalBalance, setFinalBalance] = useState(0);
+  const walletAddress = props.route.params.wallet;
+  const privateKey = props.route.params.privateKey;
+  const currency = props.route.params.currency;
 
   useEffect(() => {
     setInterval(() => {
@@ -37,8 +35,8 @@ export default function HomeScreen(props) {
   // 0xc658595AB119817247539a000fdcF9f646bb65dc
 
   const convertBnbToUsd = async () => {
-    const bnbPrice = await bnbTousd(balanceBNB); // assuming you want to convert 10 BNB to USD
-    console.log("async"); // output the USD value of 10 BNB
+    const bnbPrice = await bnbTousd(balance); // assuming you want to convert 10 BNB to USD
+    console.log("async", bnbPrice); // output the USD value of 10 BNB
   };
 
   // useEffect(() => {
@@ -52,9 +50,9 @@ export default function HomeScreen(props) {
 
   useEffect(() => {
     const getBalance = async () => {
-      const balance = await getAddressBalanceBNB(bnbPublicAddress); // pass in your BNB balance here
-      setBalanceBNB((balance / 1000000000000000000).toFixed(8));
-      console.log("balance", balance);
+      const balance1 = await getAddressBalanceBNB(walletAddress); // pass in your BNB balance here
+      setBalance((balance1 / 1000000000000000000).toFixed(8));
+      console.log("balance", balance1);
     };
 
     getBalance();
@@ -106,14 +104,14 @@ export default function HomeScreen(props) {
           >
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Recieve", { crypto: null });
+                navigation.navigate("Receive", { crypto: null });
               }}
               style={styles.FuncButton}
             >
               <Feather name="arrow-down-left" size={45} color="white" />
             </TouchableOpacity>
             <Text style={{ color: "white", fontSize: 15, marginTop: 5 }}>
-              Recieve
+              Receive
             </Text>
           </View>
 
@@ -124,7 +122,16 @@ export default function HomeScreen(props) {
               margin: 10,
             }}
           >
-            <TouchableOpacity style={styles.FuncButton}>
+            <TouchableOpacity
+              style={styles.FuncButton}
+              onPress={() =>
+                navigation.navigate("Send", {
+                  wallet: walletAddress,
+                  currency: currency,
+                  privateKey: privateKey,
+                })
+              }
+            >
               <Feather name="arrow-up-right" size={45} color="white" />
             </TouchableOpacity>
             <Text style={{ color: "white", fontSize: 15, marginTop: 5 }}>
@@ -139,7 +146,12 @@ export default function HomeScreen(props) {
               margin: 10,
             }}
           >
-            <TouchableOpacity style={styles.FuncButton}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Swap", { crypto: null });
+              }}
+              style={styles.FuncButton}
+            >
               <AntDesign name="swap" size={45} color="white" />
             </TouchableOpacity>
             <Text style={{ color: "white", fontSize: 15, marginTop: 5 }}>
@@ -206,7 +218,7 @@ export default function HomeScreen(props) {
         <View style={styles.OwnedCoinsWrapper}>
           <Coin
             symbol="BNB"
-            balance={balanceBNB}
+            balance={balance}
             walletBalance={balanceUSD}
             setWalletBalance={setBalanceUSD}
           />
