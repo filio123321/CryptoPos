@@ -222,8 +222,16 @@ export default function HomeScreen(props) {
             walletBalance={balanceUSD}
             setWalletBalance={setBalanceUSD}
           />
-          {/* <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/>
-                        <Coin symbol='ETH' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
+
+          {/* <Coin 
+            symbol='ETH'
+            balance="1.00000"
+            walletBalance={balanceUSD}
+            setWalletBalance={setBalanceUSD}
+          /> */}
+
+
+          {/* <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
           {/* <Coin symbol='XRP' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
         </View>
       </View>

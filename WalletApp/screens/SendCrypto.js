@@ -172,7 +172,7 @@ export default function SendCrypto(props) {
                 flexDirection: "row",
                 top: "70%",
                 left: "10%",
-                backgroundColor: "#1E1E1E",
+                backgroundColor: "#161616",
               },
             ]}
             onPress={() => {
@@ -417,7 +417,7 @@ styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
   },
   inputContainer: {
     margin: "6%",
@@ -442,7 +442,7 @@ styles = StyleSheet.create({
     marginTop: "50%",
     width: "80%",
     height: "40%",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
     borderColor: "#CA34FF",
     borderRadius: 20,
     borderWidth: 3,

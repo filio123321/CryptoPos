@@ -354,7 +354,7 @@ export default function SwapScreen() {
           }
         }}
       >
-        <Text style={styles.buttonText}>Send</Text>
+        <Text style={styles.buttonText}>Swap</Text>
         <FontAwesome
           name="send"
           size={24}

@@ -176,7 +176,7 @@ export default function LoginScreen() {
             fontFamily: "manjari",
             fontSize: 35,
             color: "#BD8CDC",
-            top: "23%",
+            top: "10%",
             position: "absolute",
           }}
         >
@@ -188,7 +188,7 @@ export default function LoginScreen() {
             fontFamily: "manjari",
             fontSize: 25,
             color: "white",
-            top: "33%",
+            top: "20%",
             position: "absolute",
             marginHorizontal: 20,
             // cetner the text
@@ -198,7 +198,7 @@ export default function LoginScreen() {
           CryptiX е приложение за Android и IOS. То представлява крипто
           портфейл, което позволява на нашите потребители да пазаруват лесно и
           удобно чрез крипто валути навсякъде. Транзакциите могат да бъдат
-          изпълнявани безконтактно чрез QR код или NFC.
+          изпълнявани безконтактно чрез QR код.
           {"\n"}
           {"\n"}
           {"\n"}

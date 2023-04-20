@@ -44,7 +44,7 @@ export default function App() {
             headerTitle: "Crypto Pay",
             headerTintColor: "#CA34FF",
             headerStyle: {
-              backgroundColor: "#1E1E1E",
+              backgroundColor: "#161616",
               shadowOffset: { height: 0, width: 0 },
               elevation: 0,
             },
@@ -72,7 +72,7 @@ export default function App() {
             headerTitle: "Crypto Pay",
             headerTintColor: "#CA34FF",
             headerStyle: {
-              backgroundColor: "#1E1E1E",
+              backgroundColor: "#161616",
               shadowOffset: { height: 0, width: 0 },
               elevation: 0,
             },
@@ -100,24 +100,26 @@ export default function App() {
             headerTitle: "Send Crypto",
             headerTintColor: "#CA34FF",
             headerStyle: {
-              backgroundColor: "#1E1E1E",
+              backgroundColor: "#161616",
               shadowOffset: { height: 0, width: 0 },
               elevation: 0,
             },
             headerTitleAlign: "center",
+            headerBackTitleVisible: false,
+
             headerTitleStyle: {
               fontSize: 30,
               fontFamily: "Manjari-Regular",
               marginTop: 10,
             },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Login")}
-                style={{ marginLeft: 10 }}
-              >
-                <Image source={require("./assets/back.png")} />
-              </TouchableOpacity>
-            ),
+            // headerLeft: () => (
+            //   <TouchableOpacity
+            //     onPress={() => navigation.navigate("Home")}
+            //     style={{ marginLeft: 10 }}
+            //   >
+            //     <Image source={require("./assets/back.png")} />
+            //   </TouchableOpacity>
+            // ),
           })}
         />
 
@@ -145,7 +147,7 @@ export default function App() {
             headerTitle: "Crypto Pay",
             headerTintColor: "#CA34FF",
             headerStyle: {
-              backgroundColor: "#1E1E1E",
+              backgroundColor: "#161616",
               shadowOffset: { height: 0, width: 0 },
               elevation: 0,
             },
@@ -212,7 +214,7 @@ export default function App() {
             headerTitle: "Crypto Pay",
             headerTintColor: "#CA34FF",
             headerStyle: {
-              backgroundColor: "#1E1E1E",
+              backgroundColor: "#161616",
               shadowOffset: { height: 0, width: 0 },
               elevation: 0,
             },

@@ -159,12 +159,12 @@ export default function Pay(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
   },
   modalView: {
     marginTop: "40%",
     width: "70%",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
     borderColor: "#CA34FF",
     borderRadius: 20,
     borderWidth: 3,
