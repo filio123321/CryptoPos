@@ -261,14 +261,14 @@ export default function BusinessExchange(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
     alignItems: "center",
     justifyContent: "center",
   },
   modalView: {
     marginTop: "40%",
     width: "50%",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
     borderColor: "#CA34FF",
     borderRadius: 20,
     borderWidth: 3,

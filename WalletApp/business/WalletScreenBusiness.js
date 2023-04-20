@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     alignContent: "flex-start",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
   },
   modalBackground: {
     flex: 1,
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     marginTop: "30%",
     width: "80%",
     height: "32%",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
     borderColor: "#CA34FF",
     borderRadius: 20,
     borderWidth: 3,

@@ -86,7 +86,7 @@ export default function HomeScreen(props) {
             <TouchableOpacity
               style={styles.FuncButton}
               onPress={() => {
-                navigation.replace("Pay", {
+                navigation.navigate("Pay", {
                   wallet: walletAddress,
                   privateKey: privateKey,
                   currency: currency,

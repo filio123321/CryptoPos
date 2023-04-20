@@ -111,7 +111,7 @@ export default function Pay(props) {
 
   return (
     <View style={styles.container}>
-      <View
+      {/* <View
         style={{
           backgroundColor: "#161616",
           shadowOffset: { height: 0, width: 0 },
@@ -149,7 +149,7 @@ export default function Pay(props) {
           Crypto Pay
         </Text>
         <View style={{ width: 50 }} />
-      </View>
+      </View> */}
       <Modal
         animationType="slide"
         transparent={true}

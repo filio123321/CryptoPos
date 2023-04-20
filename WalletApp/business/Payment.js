@@ -31,10 +31,10 @@ export default function Payment(props) {
     return null;
   }
   return (
-    <View style={{ flex: 1, backgroundColor: "#1E1E1E" }}>
+    <View style={{ flex: 1, backgroundColor: "#161616" }}>
       <View
         style={{
-          backgroundColor: "#1E1E1E",
+          backgroundColor: "#161616",
           shadowOffset: { height: 0, width: 0 },
           elevation: 0,
           flexDirection: "row",
@@ -105,9 +105,9 @@ export default function Payment(props) {
             logo={{ uri: "https://example.com/logo.png" }}
           />
         </View>
-        <TouchableOpacity style={styles.nfcButton}>
+        {/* <TouchableOpacity style={styles.nfcButton}>
           <Text style={styles.buttonText}>Use NFC</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -116,7 +116,7 @@ export default function Payment(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161616",
   },
   wallet: {
     position: "absolute",

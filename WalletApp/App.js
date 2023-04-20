@@ -54,14 +54,15 @@ export default function App() {
               fontFamily: "Manjari-Regular",
               marginTop: 10,
             },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Login")}
-                style={{ marginLeft: 10 }}
-              >
-                <Image source={require("./assets/back.png")} />
-              </TouchableOpacity>
-            ),
+            headerBackTitleVisible: false,
+            // headerLeft: () => (
+            //   <TouchableOpacity
+            //     onPress={() => navigation.navigate("Login")}
+            //     style={{ marginLeft: 10 }}
+            //   >
+            //     <Image source={require("./assets/back.png")} />
+            //   </TouchableOpacity>
+            // ),
           })}
         />
         <Stack.Screen
@@ -105,13 +106,13 @@ export default function App() {
               elevation: 0,
             },
             headerTitleAlign: "center",
-            headerBackTitleVisible: false,
 
             headerTitleStyle: {
               fontSize: 30,
               fontFamily: "Manjari-Regular",
               marginTop: 10,
             },
+            headerBackTitleVisible: false,
             // headerLeft: () => (
             //   <TouchableOpacity
             //     onPress={() => navigation.navigate("Home")}
@@ -129,7 +130,7 @@ export default function App() {
           options={{
             title: "Receive",
             headerStyle: { backgroundColor: "#161616" },
-            headerTintColor: "#fff",
+            headerTintColor: "#CA34FF",
             headerShadowVisible: false,
             headerTitleStyle: {
               fontWeight: "bold",
@@ -157,6 +158,7 @@ export default function App() {
               fontFamily: "Manjari-Regular",
               marginTop: 10,
             },
+            // headerBackTitleVisible: false,
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("Login")}
@@ -217,9 +219,20 @@ export default function App() {
         <Stack.Screen
           name="Pay"
           component={Pay}
-          options={({ navigation }) => ({
-            headerShown: false,
-          })}
+          options={{
+            title: "Pay",
+            headerStyle: { backgroundColor: "#161616" },
+            headerTintColor: "#CA34FF",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 30,
+              color: "#CA34FF",
+            },
+            headerShadowVisible: false,
+            headerBackTitleVisible: false,
+            headerTransparent: true,
+            // headerShown: false,
+          }}
         ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
