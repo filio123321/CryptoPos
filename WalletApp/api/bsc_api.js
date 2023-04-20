@@ -71,6 +71,7 @@ export const ethTousd = async (eth) => {
   try {
     const url = `https://api.coincap.io/v2/assets/ethereum`;
     const response = await axios.get(url);
+    console.log(response.data.data.priceUsd * eth);
     return response.data.data.priceUsd * eth;
   } catch (error) {
     console.error(error);
@@ -141,6 +142,7 @@ export const BNBTransaction = async (data) => {
         transactionObject,
         privateKey
       );
+      console.log(signedTransaction);
 
       const transactionReceipt = await web3.eth.sendSignedTransaction(
         signedTransaction.rawTransaction
@@ -151,22 +153,22 @@ export const BNBTransaction = async (data) => {
       );
       return true;
     } catch (error) {
-      console.error(`Error sending transaction: ${error}`);
+      console.log(`Error sending transaction: ${error}`);
       return false;
     }
   };
-
-  const recipient = JSON.parse(data);
-  const privateKey = recipient.privateKey;
-  const senderAddress = recipient.senderAddress;
-  const recipientAddress = recipient.wallet;
-  const amountToSend = `${recipient.amount.toFixed(9)}`;
+  console.log(data);
+  const privateKey = data["privateKey"];
+  const senderAddress = data["senderAddress"];
+  const recipientAddress = data["wallet"];
+  const amountToSend = `${data["amount"].toFixed(9)}`;
   const result = sendBNBTransaction(
     senderAddress,
     privateKey,
     recipientAddress,
     amountToSend
   );
+  console.log(result);
   return result;
 };
 
@@ -242,7 +244,7 @@ export const ETHTransaction = async (
 };
 
 export const generateEthAddress = () => {
-  const url = "http://192.168.0.105:3000/getEth";
+  const url = "http://192.168.200.61:3000/getEth";
   return fetch(url)
     .then((response) => response.json())
     .then((data) => {

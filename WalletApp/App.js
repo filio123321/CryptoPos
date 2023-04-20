@@ -178,12 +178,20 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{
-            title: "Wallet balance",
-            headerStyle: { backgroundColor: "#161616" },
-            headerTintColor: "#fff",
-            headerTitleStyle: { fontWeight: "bold" },
-            headerShadowVisible: false,
-            headerLeft: null,
+            headerShown: true,
+            headerTitle: "Crypto Wallet",
+            headerTintColor: "#CA34FF",
+            headerStyle: {
+              backgroundColor: "#161616",
+              shadowOffset: { height: 0, width: 0 },
+              elevation: 0,
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 30,
+              fontFamily: "Manjari-Regular",
+              marginTop: 10,
+            },
           }}
         />
 
@@ -210,28 +218,7 @@ export default function App() {
           name="Pay"
           component={Pay}
           options={({ navigation }) => ({
-            headerShown: true,
-            headerTitle: "Crypto Pay",
-            headerTintColor: "#CA34FF",
-            headerStyle: {
-              backgroundColor: "#161616",
-              shadowOffset: { height: 0, width: 0 },
-              elevation: 0,
-            },
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 30,
-              fontFamily: "Manjari-Regular",
-              marginTop: 10,
-            },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Login")}
-                style={{ marginLeft: 10 }}
-              >
-                <Image source={require("./assets/back.png")} />
-              </TouchableOpacity>
-            ),
+            headerShown: false,
           })}
         ></Stack.Screen>
       </Stack.Navigator>

@@ -9,16 +9,18 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import Coin from "../components/Coin";
 import { useEffect, useState } from "react";
-import { getAddressBalanceBNB, bnbTousd } from "../api/bsc_api";
-
-import { VictoryLine } from "victory-native";
+import {
+  getAddressBalanceBNB,
+  bnbTousd,
+  getAddressBalanceETH,
+} from "../api/bsc_api";
 
 // addresite sa tuk za testvane, v budeshte shte izpolzvame expo-secure-store za store-vane na priv i pub key-ovete
 
 export default function HomeScreen(props) {
   const navigation = useNavigation();
-  // const [balanceBNB, setBalanceBNB] = useState(0);
   const [balance, setBalance] = useState(0);
+  const [balanceETH, setBalanceETH] = useState(0);
   const [balanceUSD, setBalanceUSD] = useState({ bnb: 0, btc: 0, eth: 0 });
   const [finalBalance, setFinalBalance] = useState(0);
   const walletAddress = props.route.params.wallet;
@@ -32,54 +34,33 @@ export default function HomeScreen(props) {
       );
     }, 1000);
   }, []);
-  // 0xc658595AB119817247539a000fdcF9f646bb65dc
 
   const convertBnbToUsd = async () => {
     const bnbPrice = await bnbTousd(balance); // assuming you want to convert 10 BNB to USD
-    console.log("async", bnbPrice); // output the USD value of 10 BNB
   };
 
-  // useEffect(() => {
-  //     getAddressBalance('0x260e69ab6665B9ef67b60674E265b5D21c88CB45').then((balance) => {
-  //         console.log(balance);
-  //         setBalanceBNB(balance / 1000000000000000000);
-  //       }).catch((error) => {
-  //         console.error(error);
-  //       });
-  // }, []);
-
   useEffect(() => {
-    const getBalance = async () => {
-      const balance1 = await getAddressBalanceBNB(walletAddress); // pass in your BNB balance here
-      setBalance((balance1 / 1000000000000000000).toFixed(8));
-      console.log("balance", balance1);
-    };
+    if (currency == "BNB") {
+      const getBalance = async () => {
+        const balance1 = await getAddressBalanceBNB(walletAddress); // pass in your BNB balance here
+        setBalance((balance1 / 1000000000000000000).toFixed(8));
+      };
 
-    getBalance();
-    // setBalanceBNB(0.00000000);
-    // console.log("SPLIT", balanceBNB);
+      getBalance();
+    } else if (currency == "ETH") {
+      const getBalance = async () => {
+        const balance1 = await getAddressBalanceETH(walletAddress); // pass in your BNB balance here
+        setBalanceETH((balance1 / 1000000000000000000).toFixed(8));
+      };
+
+      getBalance();
+    }
   }, []);
 
-  // useEffect(() => {
-  //     const getBalanceUSD = async () => {
-  //         const balance = await bnbTousd(balanceBNB); // pass in your BNB balance here
-  //         setBalanceUSD(balance);
-  //     }
-
-  //     // getBalanceUSD();
-  //     // setBalanceUSD(0.00000000);
-  //     // console.log("SPLIT", balanceUSD);
-  // }, [balanceBNB]);
-
   return (
-    // <View style={styles.container}>
-
     <ScrollView style={styles.pageWrapper}>
       <View style={styles.BalanceWrapper}>
-        <Text style={styles.BalanceText}>
-          {/* $ {balanceUSD.toFixed(0)} */}$ {finalBalance}
-          {/* {(balanceUSD == 0 ? null : < ><Text>.</Text><Text style={styles.BalanceTextCents}>{balanceUSD.toString().split('.')[1].slice(0, 2)}</Text></>)} */}
-        </Text>
+        <Text style={styles.BalanceText}>$ {finalBalance}</Text>
       </View>
 
       <View
@@ -103,8 +84,34 @@ export default function HomeScreen(props) {
             }}
           >
             <TouchableOpacity
+              style={styles.FuncButton}
               onPress={() => {
-                navigation.navigate("Receive", { crypto: null });
+                navigation.replace("Pay", {
+                  wallet: walletAddress,
+                  privateKey: privateKey,
+                  currency: currency,
+                });
+              }}
+            >
+              <Feather name="shopping-cart" size={37} color="white" />
+            </TouchableOpacity>
+            <Text style={{ color: "white", fontSize: 15, marginTop: 5 }}>
+              Pay
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              margin: 10,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Receive", {
+                  crypto: currency,
+                  wallet: walletAddress,
+                });
               }}
               style={styles.FuncButton}
             >
@@ -167,21 +174,6 @@ export default function HomeScreen(props) {
             }}
           >
             <TouchableOpacity style={styles.FuncButton}>
-              <Feather name="shopping-cart" size={37} color="white" />
-            </TouchableOpacity>
-            <Text style={{ color: "white", fontSize: 15, marginTop: 5 }}>
-              Buy
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              margin: 10,
-            }}
-          >
-            <TouchableOpacity style={styles.FuncButton}>
               <AntDesign name="tago" size={40} color="white" />
             </TouchableOpacity>
             <Text style={{ color: "white", fontSize: 15, marginTop: 5 }}>
@@ -216,27 +208,26 @@ export default function HomeScreen(props) {
         </View>
 
         <View style={styles.OwnedCoinsWrapper}>
-          <Coin
-            symbol="BNB"
-            balance={balance}
-            walletBalance={balanceUSD}
-            setWalletBalance={setBalanceUSD}
-          />
+          {currency == "BNB" && (
+            <Coin
+              symbol="BNB"
+              balance={balance}
+              walletBalance={balanceUSD}
+              setWalletBalance={setBalanceUSD}
+            />
+          )}
 
-          {/* <Coin 
-            symbol='ETH'
-            balance="1.00000"
-            walletBalance={balanceUSD}
-            setWalletBalance={setBalanceUSD}
-          /> */}
-
-
-          {/* <Coin symbol='BTC' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
-          {/* <Coin symbol='XRP' balance='0.00000' walletBalance={balanceUSD} setWalletBalance={setBalanceUSD}/> */}
+          {currency == "ETH" && (
+            <Coin
+              symbol="ETH"
+              balance={balanceETH}
+              walletBalance={balanceUSD}
+              setWalletBalance={setBalanceUSD}
+            />
+          )}
         </View>
       </View>
     </ScrollView>
-    // </View>
   );
 }
 

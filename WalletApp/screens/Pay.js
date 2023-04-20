@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Modal,
+  Image,
 } from "react-native";
 import * as Font from "expo-font";
 import React, { useState, useEffect } from "react";
@@ -21,9 +22,9 @@ export default function Pay(props) {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [modalText, setModalText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const mywallet = "0xc658595AB119817247539a000fdcF9f646bb65dc";
-  const myprivatekey =
-    "a30f8dee8c46ff2f6e6fe3b763b53ed8bfe326e54ef9e2c24a9d7550eb72ed2f";
+  const mywallet = props.route.params.wallet;
+  const myprivatekey = props.route.params.privateKey;
+  const currency = props.route.params.currency;
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
@@ -50,14 +51,14 @@ export default function Pay(props) {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
+    console.log(data);
     data = JSON.parse(data);
-    console.log(typeof data);
     data["senderAddress"] = mywallet;
     data["privateKey"] = myprivatekey;
     console.log(data);
-    data = JSON.stringify(data);
     setScanned(true);
     if (data["currency"] == "BNB") {
+      console.log("BNB E");
       const result = await BNBTransaction(data);
       setIsSuccessful(result);
       setModalVisible(true);
@@ -110,6 +111,45 @@ export default function Pay(props) {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: "#161616",
+          shadowOffset: { height: 0, width: 0 },
+          elevation: 0,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingHorizontal: 10,
+          height: 80,
+          marginTop: 30,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() =>
+            navigation.replace("Home", {
+              wallet: mywallet,
+              privateKey: myprivatekey,
+              currency: currency,
+            })
+          }
+          style={{ marginLeft: 10 }}
+        >
+          <Image source={require("../assets/back.png")} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: "#CA34FF",
+            fontSize: 30,
+            fontFamily: "Manjari-Regular",
+            marginTop: 10,
+            textAlign: "center",
+            flex: 1,
+          }}
+        >
+          Crypto Pay
+        </Text>
+        <View style={{ width: 50 }} />
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -127,7 +167,11 @@ export default function Pay(props) {
             style={styles.buttonClose}
             onPress={() => {
               setModalVisible(false);
-              navigation.replace("Login");
+              navigation.replace("Home", {
+                wallet: mywallet,
+                privateKey: myprivatekey,
+                currency: currency,
+              });
             }}
           >
             <Text style={styles.buttonText}>Close</Text>
@@ -196,7 +240,7 @@ const styles = StyleSheet.create({
   wallet: {
     position: "absolute",
     width: "80%",
-    top: "5%",
+    top: "13%",
     left: "10%",
     height: "17%",
     borderWidth: 3,
@@ -248,7 +292,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 300,
     left: "10%",
-    top: "29%",
+    top: "35%",
     borderWidth: 2,
     borderColor: "#CA34FF",
   },

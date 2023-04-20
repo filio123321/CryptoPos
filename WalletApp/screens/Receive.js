@@ -20,47 +20,17 @@ import QRCode from "react-native-qrcode-svg";
 const windowWidth = Dimensions.get("window").width;
 const qrCodeHeight = windowWidth * 0.8;
 
-const bnbPublicAddress = "0xc658595AB119817247539a000fdcF9f646bb65dc";
-const btcPublicAddress = "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh";
-const ethPublicAddress = "0x6326cAEB1BE2C7cDb8c31e46662368C31ebaECf4";
-
-const getBNBPublicAddress = async () => {
-  try {
-    const address = await SecureStore.getItemAsync("BNB_pubic");
-    return address;
-  } catch (error) {
-    // Handle error
-  }
-};
-
 const Recieve = (props) => {
-  const [address, setAddress] = useState("");
   const ref = useRef(PagerView);
+  const PublicAddress = props.route.params.wallet;
   const navigation = useNavigation();
   const [page, setPage] = useState(0);
-  // const [slectedCrypto, setSlectedCrypto] = useState(0);
-  // let { crypto } = route.params;
-  const [crypto, setCrypto] = useState(props.crypto);
+
+  const [crypto, setCrypto] = useState(props.route.params.crypto);
 
   useEffect(() => {
     console.log("crypto", crypto);
   }, [crypto]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const address = await getBNBPublicAddress();
-      setAddress(address);
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    // if address
-    if (!address) {
-      setAddress(bnbPublicAddress);
-    }
-  }, []);
 
   const cryptos = [
     { key: 0, label: "Bitcoin", crypto: "BTC" },
@@ -76,21 +46,6 @@ const Recieve = (props) => {
   if (!fontsLoaded) {
     return null;
   }
-
-  // useEffect(() => {
-  //     SecureStore.getItemAsync('BNB_pub').then((value) => {
-  //         console.log("bnb", value);
-  //     });
-
-  // }, []);
-
-  // useEffect(() => {
-  //     if (crypto == null){
-  //         const page = 0;
-  //     }else{
-  //         const page = 1;
-  //     }
-  // }, []);
 
   const optionChangeHandler = async (option) => {
     try {
@@ -108,7 +63,7 @@ const Recieve = (props) => {
   return (
     <PagerView
       style={styles.pagerView}
-      initialPage={crypto ? 1 : 0}
+      initialPage={0}
       ref={ref}
       scrollEnabled={false}
     >
@@ -150,8 +105,6 @@ const Recieve = (props) => {
               onChange={(option) => {
                 optionChangeHandler(option);
               }}
-              // onChange={(option)=>{ alert(`${option.label} (${option.key}) nom nom nom`) }}
-              // style={{borderRadius: 10, backgroundColor: "rgba(206, 155, 230, 0.15)", width: "100%", }}
               selectStyle={{
                 borderRadius: 10,
                 backgroundColor: "rgba(206, 155, 230, 0.15)",
@@ -164,12 +117,6 @@ const Recieve = (props) => {
                 fontWeight: "bold",
                 fontFamily: "manjari",
               }}
-              // cancelStyle={{backgroundColor: "#CA34FF", borderRadius: 15, padding: 10, }}
-              // cancelTextStyle={{color: "#fff", fontSize: 20, fontWeight: "bold", fontFamily: "manjari"}}
-              // optionStyle={{backgroundColor: "#CA34FF", borderRadius: 15, padding: 10, }}
-              // optionTextStyle={{color: "#fff", fontSize: 20, fontWeight: "bold", fontFamily: "manjari"}}
-              // sectionStyle={{backgroundColor: "#CA34FF", borderRadius: 15, padding: 10, }}
-              // sectionTextStyle={{color: "#fff", fontSize: 20, fontWeight: "bold", fontFamily: "manjari"}}
             />
           </View>
 
@@ -218,18 +165,18 @@ const Recieve = (props) => {
                 size={24}
                 color="#fff"
                 style={{ marginRight: 10 }}
-                onPress={() => Clipboard.setString(address)}
+                onPress={() => Clipboard.setString(PublicAddress)}
               />
               <MaterialCommunityIcons
                 name="share-outline"
                 size={24}
                 color="#fff"
-                onPress={() => Share.share({ message: address })}
+                onPress={() => Share.share({ message: PublicAddress })}
               />
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => Clipboard.setString(address)}>
+          <TouchableOpacity onPress={() => Clipboard.setString(PublicAddress)}>
             <Text
               style={{
                 color: "#fff",
@@ -239,14 +186,14 @@ const Recieve = (props) => {
                 color: "#CA34FF",
               }}
             >
-              {address}
+              {PublicAddress}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.qrWrapper}>
           <QRCode
-            value={address}
+            value={PublicAddress}
             size={qrCodeHeight}
             color="#161616"
             backgroundColor="#fff"

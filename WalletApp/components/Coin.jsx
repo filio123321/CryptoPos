@@ -4,7 +4,7 @@ import { cryptoSymbol } from 'crypto-symbol'
 import { useState, useEffect } from 'react';
 import { VictoryLine } from "victory-native";
 import * as SecureStore from 'expo-secure-store';
-import { getAddressBalance, bnbTousd } from '.././api/bsc_api';
+import { getAddressBalance, bnbTousd, ethTousd } from '.././api/bsc_api';
 
 
 
@@ -49,12 +49,14 @@ const Coin = (props) => {
         setBalance(data);
       }
       )
-    } else {
-      setBalance(props.balance);
+    } else if (props.symbol.toUpperCase() === "ETH"){
+      ethTousd(props.balance).then((data) => {      setBalance(data);
+      })
     }
 
 
   }, [props.balance])
+
 
   useEffect(() => {
     let old = walletBalance;
@@ -63,27 +65,15 @@ const Coin = (props) => {
 
     setWalletBalance(newBalance);
 
-    console.log(walletBalance);
   }, [balance])
 
 
   const widthWithoutImage = '100% - 60'
 
 
-  // do that but set interval to 5 seconds
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     getCoinPrice()
-  //     console.log('got price');
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
   useEffect(() => {
     const toDate = Math.floor(Date.now() / 1000); // current time in unix format
     const fromDate = toDate - (24 * 60 * 60); // 24 hours ago in unix format
-    // const fromDate = toDate - (2 * 365 * 24 * 60 * 60); 
 
     fetch(`${API_URL}?symbol=${SYMBOL}&resolution=${RESOLUTION}&from=${fromDate}&to=${toDate}&token=${API_TOKEN}`)
       .then((response) => response.json())
@@ -106,18 +96,7 @@ const Coin = (props) => {
       }
       })
 
-      // get first and last closing price
-      // .then(() => {
-      //   const firstClosingPrice = chartData[0].y;
-      //   const lastClosingPrice = chartData[chartData.length - 1].y;
-      //   const changePrice = ((lastClosingPrice - firstClosingPrice) / firstClosingPrice * 100).toFixed(2);
-      //   setChangePrice(changePrice);
-      //   if (changePrice > 0) {
-      //     setChangePriceColor('#00FF00');
-      //   } else if (changePrice < 0) {
-      //     setChangePriceColor('#FF0000');
-      //   }
-      // })
+    
       .catch((error) => {
         console.error(error);
       });
