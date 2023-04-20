@@ -63,7 +63,7 @@ const Recieve = (props) => {
   return (
     <PagerView
       style={styles.pagerView}
-      initialPage={0}
+      initialPage={1}
       ref={ref}
       scrollEnabled={false}
     >
