@@ -17,6 +17,8 @@ const qrCodeHeight = windowWidth * 0.8;
 
 export default function Pay(props) {
   const navigation = useNavigation();
+  const [modalInformation, setModalInformation] = useState([]);
+  const [modalConfirm, setModalConfirm] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
@@ -25,6 +27,7 @@ export default function Pay(props) {
   const mywallet = props.route.params.wallet;
   const myprivatekey = props.route.params.privateKey;
   const currency = props.route.params.currency;
+
   const [fontsLoaded, error] = Font.useFonts({
     "Manjari-Regular": require("../assets/fonts/Manjari-Regular.ttf"),
   });
@@ -51,27 +54,34 @@ export default function Pay(props) {
   }
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    console.log(data);
     data = JSON.parse(data);
-    data["senderAddress"] = mywallet;
-    data["privateKey"] = myprivatekey;
     console.log(data);
-    setScanned(true);
-    if (data["currency"] == "BNB") {
-      console.log("BNB E");
-      const result = await BNBTransaction(data);
-      setIsSuccessful(result);
-      setModalVisible(true);
-    } else if (data["currency"] == "ETH") {
-      const result = await ETHTransaction(
-        mywallet,
-        myprivatekey,
-        data["wallet"],
-        data["amount"]
-      );
-      setIsSuccessful(result);
-      setModalVisible(true);
-    }
+    setModalInformation([
+      `${data["amount"].toFixed(9)}`,
+      data["currency"],
+      data["wallet"],
+    ]);
+    setModalConfirm(true);
+    // data = JSON.parse(data);
+    // data["senderAddress"] = mywallet;
+    // data["privateKey"] = myprivatekey;
+    // console.log(data);
+    // setScanned(true);
+    // if (data["currency"] == "BNB") {
+    //   console.log("BNB E");
+    //   const result = await BNBTransaction(data);
+    //   setIsSuccessful(result);
+    //   setModalVisible(true);
+    // } else if (data["currency"] == "ETH") {
+    //   const result = await ETHTransaction(
+    //     mywallet,
+    //     myprivatekey,
+    //     data["wallet"],
+    //     data["amount"]
+    //   );
+    //   setIsSuccessful(result);
+    //   setModalVisible(true);
+    // }
   };
 
   if (hasPermission === null) {
@@ -111,45 +121,87 @@ export default function Pay(props) {
 
   return (
     <View style={styles.container}>
-      {/* <View
-        style={{
-          backgroundColor: "#161616",
-          shadowOffset: { height: 0, width: 0 },
-          elevation: 0,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: 10,
-          height: 80,
-          marginTop: 30,
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalConfirm}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalConfirm(!modalConfirm);
         }}
       >
-        <TouchableOpacity
-          onPress={() =>
-            navigation.replace("Home", {
-              wallet: mywallet,
-              privateKey: myprivatekey,
-              currency: currency,
-            })
-          }
-          style={{ marginLeft: 10 }}
-        >
-          <Image source={require("../assets/back.png")} />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: "#CA34FF",
-            fontSize: 30,
-            fontFamily: "Manjari-Regular",
-            marginTop: 10,
-            textAlign: "center",
-            flex: 1,
-          }}
-        >
-          Crypto Pay
-        </Text>
-        <View style={{ width: 50 }} />
-      </View> */}
+        <View style={[styles.modalView, { width: "90%", height: "50%" }]}>
+          <Text style={[styles.buttonText, { padding: 10 }]}>
+            Please confirm the transaction:
+          </Text>
+
+          <Text style={[styles.buttonText]}>Send to wallet:</Text>
+          <Text style={[styles.buttonText]}>{modalInformation[2]}</Text>
+
+          <Text style={[styles.buttonText, { padding: 10 }]}>
+            Amount: {modalInformation[0]}
+          </Text>
+
+          <Text style={[styles.buttonText, { padding: 10 }]}>
+            Currency: {modalInformation[1]}
+          </Text>
+          <View style={{ flexDirection: "row", height: "100%", width: "100%" }}>
+            <TouchableOpacity
+              style={[
+                styles.buttonClose,
+                {
+                  position: "absolute",
+                  width: "40%",
+                  height: "5%",
+                  left: "5%",
+                },
+              ]}
+              onPress={async () => {
+                let a = modalInformation;
+
+                if (a[1] == "BNB") {
+                  const result = await BNBTransaction(
+                    mywallet,
+                    myprivatekey,
+                    modalInformation[2],
+                    modalInformation[0]
+                  );
+                  setIsSuccessful(result);
+                  setModalConfirm(false);
+                  setModalVisible(true);
+                } else if (data["currency"] == "ETH") {
+                  const result = await ETHTransaction(
+                    mywallet,
+                    myprivatekey,
+                    modalInformation[2],
+                    modalInformation[0]
+                  );
+                  setIsSuccessful(result);
+                  setModalConfirm(false);
+                  setModalVisible(true);
+                }
+              }}
+            >
+              <Text style={styles.buttonText}>Confirm</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.buttonClose,
+                {
+                  position: "absolute",
+                  width: "40%",
+                  height: "5%",
+                  right: "5%",
+                },
+              ]}
+              onPress={() => setModalConfirm(false)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <Modal
         animationType="slide"
         transparent={true}

@@ -109,7 +109,12 @@ export const usdToBtc = async (usdAmount) => {
   }
 };
 
-export const BNBTransaction = async (data) => {
+export const BNBTransaction = async (
+  senderAddress,
+  privateKey,
+  recipientAddress,
+  amountToSend
+) => {
   const Web3 = require("web3");
 
   const sendBNBTransaction = async (
@@ -157,11 +162,6 @@ export const BNBTransaction = async (data) => {
       return false;
     }
   };
-  console.log(data);
-  const privateKey = data["privateKey"];
-  const senderAddress = data["senderAddress"];
-  const recipientAddress = data["wallet"];
-  const amountToSend = `${data["amount"].toFixed(9)}`;
   const result = sendBNBTransaction(
     senderAddress,
     privateKey,
