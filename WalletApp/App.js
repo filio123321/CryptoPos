@@ -159,14 +159,14 @@ export default function App() {
               marginTop: 10,
             },
             // headerBackTitleVisible: false,
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Login")}
-                style={{ marginLeft: 10 }}
-              >
-                <Image source={require("./assets/back.png")} />
-              </TouchableOpacity>
-            ),
+            // headerLeft: () => (
+            //   <TouchableOpacity
+            //     onPress={() => navigation.navigate("Login")}
+            //     style={{ marginLeft: 10 }}
+            //   >
+            //     <Image source={require("./assets/back.png")} />
+            //   </TouchableOpacity>
+            // ),
           })}
         />
         <Stack.Screen
